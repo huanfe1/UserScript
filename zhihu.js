@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://www.cnblogs.com/huanfeiiiii/
-// @version      0.5
+// @version      0.6
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        https://www.zhihu.com/*
