@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://greasyfork.org/zh-CN/scripts/443919
-// @version      0.6
+// @version      0.7
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        https://www.zhihu.com/*
@@ -14,9 +14,9 @@
 
 (function() {
     var url = window.location.href;
-    var style_Add = document.createElement('style');
 
-    var style = '';
+    var style = ''
+
     switch (url.split("/")[3].split("?")[0]) {
         case "follow":
         case "hot":
@@ -43,6 +43,8 @@
             break
     }
 
+    var style_Add = document.createElement('style');
+
     if (document.lastChild) {
         document.lastChild.appendChild(style_Add).textContent = style;
     } else {
@@ -56,27 +58,36 @@
 
 
     function homePage() {
-        style += '.Topstory-mainColumn{width:inherit}.Topstory-container>.GlobalSideBar{min-width:24%;}.Topstory-container>.GlobalSideBar>div>.Sticky>:not(:nth-child(2)):not(:nth-child(3)){display:none;}'
+        style += '.Topstory-mainColumn{width:inherit}';
+        style += '.Topstory-container>.GlobalSideBar{min-width:24%;opacity: 0.1;transition: opacity 0.5s;}';
+        style += '.Topstory-container>.GlobalSideBar>div>.Sticky>:not(:nth-child(2)):not(:nth-child(3)){display:none;}';
+        style += '.Topstory-container>.GlobalSideBar:hover{opacity:1}'
+        style += 'header.is-hidden{display:none;}' //顶部栏向下滚动消失
+        style += '.GlobalSideBar>div>div.Sticky.is-fixed{display:none}' // 侧边栏滚动时消失
     }
 
 
     function searchPage() {
-        style += '.SearchMain{width:inherit;}'
+        style += '.SearchMain{width:inherit;}';
     }
 
 
     function questionPage() {
-        style += '.Question-sideColumn{display:none;}.Question-mainColumn{width:inherit;}'
+        style += '.Question-sideColumn{display:none;}';
+        style += '.Question-mainColumn{width:inherit;}';
     }
 
 
     function collectionPage() {
-        style += `.CollectionsDetailPage-mainColumn{width:inherit;}.SideBarCollectionItem-description{display:none;}.CollectionDetailPageSideBar-cardHeaderLeftLink{display:none;}`
+        style += `.CollectionsDetailPage-mainColumn{width:inherit;}`;
+        style += '.CollectionDetailPageSideBar-cardHeaderLeftLink{display:none;}';
+        style += '.CollectionDetailPageSideBar{min-width:20%}';
     }
 
 
     function peoplePage() {
-        style += '.Profile-mainColumn{width:inherit;}.Profile-sideColumn{display:none;}'
+        style += '.Profile-mainColumn{width:inherit;}';
+        style += '.Profile-sideColumn{display:none;}';
     }
 })();
 
