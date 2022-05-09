@@ -59,11 +59,10 @@
 
     function homePage() {
         style += '.Topstory-mainColumn{width:inherit}';
-        style += '.Topstory-container>.GlobalSideBar{min-width:24%;opacity: 0.1;transition: opacity 0.5s;}';
+        style += '.Topstory-container>.GlobalSideBar{min-width:24%;}';
         style += '.Topstory-container>.GlobalSideBar>div>.Sticky>:not(:nth-child(2)):not(:nth-child(3)){display:none;}';
-        style += '.Topstory-container>.GlobalSideBar:hover{opacity:1}'
         style += 'header.is-hidden{display:none;}' //顶部栏向下滚动消失
-        style += '.GlobalSideBar>div>div.Sticky.is-fixed{display:none}' // 侧边栏滚动时消失
+        style += '.GlobalSideBar>div>div.Sticky.is-fixed{display:none;}' // 侧边栏滚动时消失
     }
 
 
