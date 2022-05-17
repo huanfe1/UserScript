@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  跳转到多图显示的页面
-// @author       You
+// @author       huanfei
 // @match        www.192tp.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=192tp.com
 // @grant        none

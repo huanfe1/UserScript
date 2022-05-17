@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://greasyfork.org/zh-CN/scripts/443919
-// @version      0.7
+// @version      0.7.2
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        https://www.zhihu.com/*
@@ -42,6 +42,13 @@
             searchPage()
             break
     }
+    // 获取当前时间
+    var hour = new Date().getHours();
+    if (hour >= 6 && hour <= 17) {
+        console.log("白天")
+    } else {
+        console.log("黑天")
+    }
 
     var style_Add = document.createElement('style');
 
@@ -73,12 +80,12 @@
 
     function questionPage() {
         style += '.Question-sideColumn{display:none;}';
-        style += '.Question-mainColumn{width:inherit;}';
+        style += '.Question-mainColumn .ListShortcut{width:inherit;}';
     }
 
 
     function collectionPage() {
-        style += `.CollectionsDetailPage-mainColumn{width:inherit;}`;
+        style += `.CollectionsDetailPage-mainColumn .ListShortcut{width:inherit;}`;
         style += '.CollectionDetailPageSideBar-cardHeaderLeftLink{display:none;}';
         style += '.CollectionDetailPageSideBar{min-width:20%}';
     }
