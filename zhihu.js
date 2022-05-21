@@ -108,6 +108,7 @@
     function peoplePage() {
         style += '.Profile-mainColumn{width:inherit;}';
         style += '.Profile-sideColumn{display:none;}';
+        style += '.AuthorInfo-Widget{display:none;}'
     }
 
 
