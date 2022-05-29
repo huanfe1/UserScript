@@ -1,4 +1,6 @@
 # UserScript
 个人脚本
 
-https://greasyfork.org/zh-CN/users/651045
+[zhihuSimplified](https://gitee.com/huan_fei/UserScript/raw/main/zhihuSimplified/zhihuSimplified.user.js)
+
+[bilibiliSimplified](https://gitee.com/huan_fei/UserScript/raw/main/bilibiliSimplified/bilibiliSimplified.user.js)
