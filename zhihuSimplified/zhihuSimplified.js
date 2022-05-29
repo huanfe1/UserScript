@@ -15,9 +15,9 @@
 (function () {
     var url = window.location.href;
 
-    var style = ''
+    var style = '';
 
-    var thirdLevel = url.split(".")[0].split("/")[2]
+    var thirdLevel = url.split(".")[0].split("/")[2];
     
     switch (thirdLevel) {
         case "www":
@@ -123,7 +123,3 @@
         style += '.css-1xhi2j9{width:60vw}';
     }
 })();
-
-// 参考:
-// https://meta.appinn.net/t/topic/23988
-// https://www.csdn.net/tags/MtjaEgysNjQ0NTEtYmxvZwO0O0OO0O0O.html
