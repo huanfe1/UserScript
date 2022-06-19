@@ -55,8 +55,8 @@
 
 
     function homePage() {
-        style += '.recommended-swipe{display:none;}';
-        style += '.recommend-container__2-line>*:nth-of-type(1n + 8){display:block !important;}';
+        // style += '.recommended-swipe{display:none;}';
+        // style += '.recommend-container__2-line>*:nth-of-type(1n + 8){display:block !important;}';
         style += '.eva-banner{display:none}'; // 去除广告横幅
         style += '.bili-grid:nth-child(3){display:none}'; // 去除推广
     }
