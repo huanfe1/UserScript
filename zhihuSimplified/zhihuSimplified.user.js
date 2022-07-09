@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://greasyfork.org/zh-CN/scripts/443919
-// @version      0.7.3
+// @version      0.7.4
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        https://www.zhihu.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=zhihu.com
-// @grant        none
+// @grant        GM_addStyle
 // @license      MIT
 // @run-at       document-start
 // ==/UserScript==
@@ -18,7 +18,7 @@
     var style = '';
 
     var thirdLevel = url.split(".")[0].split("/")[2];
-    
+
     switch (thirdLevel) {
         case "www":
             switch (url.split("/")[3].split("?")[0]) {
@@ -55,35 +55,14 @@
             columnPage()
     }
 
-
-    // 获取当前时间
-    var hour = new Date().getHours();
-    if (hour >= 6 && hour <= 17) {
-        console.log("白天")
-    } else {
-        console.log("黑天")
-    }
-
-    var style_Add = document.createElement('style');
-
-    if (document.lastChild) {
-        document.lastChild.appendChild(style_Add).textContent = style;
-    } else {
-        let timer = setInterval(function () {
-            if (document.lastChild) {
-                clearInterval(timer);
-                document.lastChild.appendChild(style_Add).textContent = style;
-            }
-        });
-    }
+    console.log(style);
+    GM_addStyle(style)
 
 
     function homePage() {
         style += '.Topstory-mainColumn{width:inherit}';
         style += '.Topstory-container>.GlobalSideBar{min-width:24%;}';
         style += '.Topstory-container>.GlobalSideBar>div>.Sticky>:not(:nth-child(2)):not(:nth-child(3)){display:none;}';
-        style += 'header.is-hidden{display:none;}' //顶部栏向下滚动消失
-        style += '.GlobalSideBar>div>div.Sticky.is-fixed{display:none;}' // 侧边栏滚动时消失
     }
 
 
