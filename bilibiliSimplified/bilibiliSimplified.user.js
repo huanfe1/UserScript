@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    http://tampermonkey.net/
-// @version      0.5.1
+// @version      0.5.2
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -119,6 +119,7 @@
     }
 
     function setRecommend() {
+        // 设置推荐元素
         let style = `.bilibili_recommend{margin-bottom:8px;padding:10px;border-radius:5px;background-color:#ffffff}
         .bilibili_recommend a{position:relative;display:inline-flex}
         .bilibili_recommend a img{width:100%;border-radius:5px}
@@ -133,7 +134,7 @@
         .preview_pic{position:absolute;top:0;width:100%;height:-moz-available;height:-webkit-fill-available}
         .timeshow{position:absolute;bottom:0;padding:7px;color:#ffffff;font-size:13px}
         .recommend_switch{margin:0 15px 0 auto;display:flex;align-items:center}
-        .recommend_switch p{font-size:14px;color:#6d757a}
+        .recommend_switch p{font-size:14px;color:#6d757a;line-hight:100%;}
         .switch-button{width:35px;height:20px;background:#9499A0;cursor:pointer;border-radius:10px;margin-left:15px;position:relative}
         .switch-button::before{content:"";position:absolute;top:2px;left:3px;border-radius:100%;width:16px;height:16px;background-color:#fff;transition:all .2s}
         .switch-button.on{background:#00a1d6}
@@ -181,6 +182,7 @@
 
     var recommend_num = 0;
     function addRecommend() {
+        // 添加推荐视频
         recommend_num += 1;
         GM_xmlhttpRequest({
             method: "GET",
@@ -228,7 +230,6 @@
         });
     }
 
-    var previewTimer;
     var previewDict = {};
     function setPreview(dom, id) {
         if (!previewDict.id) {
@@ -245,49 +246,38 @@
             });
         }
 
-        if (previewDict[id]) {
-            changePreview();
-        } else {
-            let timer = setInterval(function () {
-                if (previewDict[id]) {
-                    clearInterval(timer);
-                    changePreview();
-                }
-            });
-        }
-        function changePreview() {
-            let num = previewDict[id].index.length;
-            let pic_num = 0;
-            let x = 0;
-            let y = 0;
-            let inNum = 0;
-            clearInterval(previewTimer);
-            previewTimer = setInterval(function () {
-                dom.querySelector(".preview_pic").setAttribute(
-                    "style",
-                    `
-                background-image:url(${previewDict[id].image[pic_num]});
-                background-size:2760px;
-                background-position:-${x + 15}px -${y}px
-                `
-                );
-                inNum += 1;
-                x += 276;
-                if (x >= 2600) {
-                    x = 0;
-                    y += 155;
-                }
-                if (inNum >= 100) {
-                    x = 0;
-                    y = 0;
-                    pic_num += 1;
-                }
+        let timer = setInterval(function () {
+            if (previewDict[id]) {
+                clearInterval(timer);
+                changePreview();
+            }
+        });
 
-                if (inNum >= num) {
-                    x = 270;
-                    y = 0;
-                    pic_num = 0;
-                    inNum = 0;
+        function changePreview() {
+            let frameAll = previewDict[id].index.length;
+            let now_frame = 0;
+            let framePage = 0;
+
+            let previewTimer = setInterval(function () {
+                if (dom.querySelector(".preview_pic").style.display == "none") {
+                    clearInterval(previewTimer);
+                } else {
+                    dom.querySelector(".preview_pic").setAttribute(
+                        "style",
+                        `
+                        background-image:url(${previewDict[id].image[framePage]});
+                        background-size:2800px;
+                        background-position:-${(now_frame % 10) * 280 + 15}px -${~~((now_frame % 100) / 10) * 158}px
+                        `
+                    );
+                    now_frame += 1;
+                    if (now_frame % 100 == 0) {
+                        framePage += 1;
+                    }
+                    if (now_frame >= frameAll-1) {
+                        now_frame = 1;
+                        framePage = 0;
+                    }
                 }
             }, 300);
         }
@@ -317,6 +307,7 @@
     }
 
     function hoverPreview(dom, timeout, aid) {
+        // 悬停预览
         let seed;
         dom.addEventListener("mouseenter", function () {
             seed = setTimeout(function () {
@@ -325,7 +316,6 @@
             }, timeout);
         });
         dom.addEventListener("mouseleave", function () {
-            clearInterval(previewTimer);
             dom.querySelector(".preview_pic").setAttribute("style", "display:none");
             clearTimeout(seed);
         });
