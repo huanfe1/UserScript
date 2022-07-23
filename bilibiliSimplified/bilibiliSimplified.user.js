@@ -22,6 +22,7 @@
     var url = window.location.href;
     var style = "";
     var recommendData = new Array();
+    var accessKey = GM_getValue("accessKey") ? GM_getValue("accessKey") : ""
 
     if (url.split("/")[2] == "www.bilibili.com") {
         switch (url.split("/")[3]) {
@@ -67,6 +68,7 @@
         let timer = setInterval(function () {
             if (document.querySelector("aside.right")) {
                 clearInterval(timer);
+                if (!accessKey) {getAccessKey()};
                 setRecommend();
                 getRecommendData();
                 scrollRefsh();
@@ -76,7 +78,7 @@
 
     function videoPlay() {
         // 提示弹窗
-        style += ".bilibili-player-video-inner{display:none}";
+        style += ".bilibili-player-video-popup{display:none !important;}";
         // 播放页关注按钮
         style += ".bilibili-player-video-top-follow{display:none !important;}";
         // 广告
@@ -95,7 +97,7 @@
         style += ".bilibili-player-electric-panel{opacity:0;}";
 
         // 跳过充电页面
-        document.querySelector("div.bilibili-player-video > bwp-video").addEventListener("ended", function () {
+        document.querySelector("div.bilibili-player-video > *").addEventListener("ended", function () {
             let timer = setInterval(function () {
                 if (document.querySelector(".bilibili-player-electric-panel")) {
                     document.querySelector("div.bilibili-player-electric-panel-jump").click();
@@ -181,31 +183,31 @@
 
     function addRecommend() {
         // 添加推荐视频
-        let item = recommendData.pop();
+        let data = recommendData.pop();
         let text = `
-        <a href="${item.uri}" target="_blank"><img src="${item.pic}" alt="${item.title}" />
+        <a href="https://www.bilibili.com${data.goto == 'av' ? `/video/av${data.param}` : data.uri}" target="_blank"><img src="${data.cover}@672w_378h" alt="${data.title}" />
             <div class="preview_pic"></div>
-            <div class="timeshow">${numConverter.time(item.duration)}</div>
+            <div class="timeshow">${numConverter.time(data.duration)}</div>
             <div class="video_mark">
                 <div class="video_mark_text">稍后在看</div>
             </div>
         </a>
-        <div class="bilibili_recommend_text"><a href="${item.uri}" target="_blank">${item.title}</a></div>
+        <div class="bilibili_recommend_text"><a href="${data.goto == 'av' ? `/video/av${data.param}` : data.uri}" target="_blank">${data.title}</a></div>
         <div class="recommend_info">
-            <a href="https://space.bilibili.com/${item.owner.mid}" class="playinfo" target="_blank"><svg width="18" height="16"
+            <a href="https://space.bilibili.com/${data.mid}" class="playinfo" target="_blank"><svg width="18" height="16"
                     viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M9 2.0625C6.85812 2.0625 4.98983 2.1725 3.67735 2.2798C2.77861 2.35327 2.08174 3.04067 2.00119 3.93221C1.90388 5.00924 1.8125 6.43727 1.8125 8C1.8125 9.56273 1.90388 10.9908 2.00119 12.0678C2.08174 12.9593 2.77861 13.6467 3.67735 13.7202C4.98983 13.8275 6.85812 13.9375 9 13.9375C11.1421 13.9375 13.0105 13.8275 14.323 13.7202C15.2216 13.6467 15.9184 12.9595 15.9989 12.0682C16.0962 10.9916 16.1875 9.56386 16.1875 8C16.1875 6.43614 16.0962 5.00837 15.9989 3.9318C15.9184 3.04049 15.2216 2.3533 14.323 2.27983C13.0105 2.17252 11.1421 2.0625 9 2.0625ZM3.5755 1.03395C4.9136 0.924562 6.81674 0.8125 9 0.8125C11.1835 0.8125 13.0868 0.924583 14.4249 1.03398C15.9228 1.15645 17.108 2.31588 17.2438 3.81931C17.3435 4.92296 17.4375 6.38948 17.4375 8C17.4375 9.61052 17.3435 11.077 17.2438 12.1807C17.108 13.6841 15.9228 14.8436 14.4249 14.966C13.0868 15.0754 11.1835 15.1875 9 15.1875C6.81674 15.1875 4.9136 15.0754 3.5755 14.966C2.07738 14.8436 0.892104 13.6838 0.756256 12.1803C0.656505 11.0762 0.5625 9.60942 0.5625 8C0.5625 6.39058 0.656505 4.92379 0.756257 3.81973C0.892104 2.31616 2.07738 1.15643 3.5755 1.03395ZM4.41663 4.93726C4.72729 4.93726 4.97913 5.1891 4.97913 5.49976V8.62476C4.97913 9.34963 5.56675 9.93726 6.29163 9.93726C7.0165 9.93726 7.60413 9.34963 7.60413 8.62476V5.49976C7.60413 5.1891 7.85597 4.93726 8.16663 4.93726C8.47729 4.93726 8.72913 5.1891 8.72913 5.49976V8.62476C8.72913 9.97095 7.63782 11.0623 6.29163 11.0623C4.94543 11.0623 3.85413 9.97095 3.85413 8.62476V5.49976C3.85413 5.1891 4.10597 4.93726 4.41663 4.93726ZM10.2501 4.93726C9.9394 4.93726 9.68756 5.1891 9.68756 5.49976V10.4998C9.68756 10.8104 9.9394 11.0623 10.2501 11.0623C10.5607 11.0623 10.8126 10.8104 10.8126 10.4998V9.60392H12.2292C13.5179 9.60392 14.5626 8.55925 14.5626 7.27059C14.5626 5.98193 13.5179 4.93726 12.2292 4.93726H10.2501ZM12.2292 8.47892H10.8126V6.06226H12.2292C12.8966 6.06226 13.4376 6.60325 13.4376 7.27059C13.4376 7.93793 12.8966 8.47892 12.2292 8.47892Z">
                     </path>
                 </svg>
-                <p class="name">${item.owner.name}</p>
+                <p class="name">${data.name}</p>
             </a>
-            <div class="playinfo" title="${item.stat.view}">
+            <div class="playinfo"">
                 <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M3.67735 2.2798C4.98983 2.1725 6.85812 2.0625 9 2.0625C11.1421 2.0625 13.0105 2.17252 14.323 2.27983C15.2216 2.3533 15.9184 3.04049 15.9989 3.9318C16.0962 5.00837 16.1875 6.43614 16.1875 8C16.1875 9.56386 16.0962 10.9916 15.9989 12.0682C15.9184 12.9595 15.2216 13.6467 14.323 13.7202C13.0105 13.8275 11.1421 13.9375 9 13.9375C6.85812 13.9375 4.98983 13.8275 3.67735 13.7202C2.77861 13.6467 2.08174 12.9593 2.00119 12.0678C1.90388 10.9908 1.8125 9.56273 1.8125 8C1.8125 6.43727 1.90388 5.00924 2.00119 3.93221C2.08174 3.04067 2.77861 2.35327 3.67735 2.2798ZM9 0.8125C6.81674 0.8125 4.9136 0.924562 3.5755 1.03395C2.07738 1.15643 0.892104 2.31616 0.756257 3.81973C0.656505 4.92379 0.5625 6.39058 0.5625 8C0.5625 9.60942 0.656505 11.0762 0.756256 12.1803C0.892104 13.6838 2.07738 14.8436 3.5755 14.966C4.9136 15.0754 6.81674 15.1875 9 15.1875C11.1835 15.1875 13.0868 15.0754 14.4249 14.966C15.9228 14.8436 17.108 13.6841 17.2438 12.1807C17.3435 11.077 17.4375 9.61052 17.4375 8C17.4375 6.38948 17.3435 4.92296 17.2438 3.81931C17.108 2.31588 15.9228 1.15645 14.4249 1.03398C13.0868 0.924583 11.1835 0.8125 9 0.8125ZM11.1876 8.72203C11.7431 8.40128 11.7431 7.59941 11.1876 7.27866L8.06133 5.47373C7.50577 5.15298 6.81133 5.55392 6.81133 6.19542V9.80527C6.81133 10.4468 7.50577 10.8477 8.06133 10.527L11.1876 8.72203Z"
                         fill="var(--text3)"></path>
-                </svg>${numConverter.view(item.stat.view)}
+                </svg>${numConverter.view(data.play)}
             </div>
         </div>
         `;
@@ -214,9 +216,9 @@
         dom.innerHTML = text;
         document.getElementById("dynamic_recommend").appendChild(dom);
         // 悬浮预览
-        hoverPreview(dom, item.id);
+        hoverPreview(dom, data.param);
         // 添加稍后在看
-        addMarkVideo(dom.querySelector(".video_mark"), item.id);
+        addMarkVideo(dom.querySelector(".video_mark"), data.param);
         // 防止 Mixed Content 提示
         let el = document.createElement("meta");
         el.setAttribute("http-equiv", "Content-Security-Policy");
@@ -226,26 +228,27 @@
 
     function getRecommendData() {
         // 获取推荐API数据
-        let num = ~~((document.getElementsByClassName("bilibili_recommend").length + 1) / 10) + 1;
-        const request = new XMLHttpRequest();
-        request.open("GET", `https://api.bilibili.com/x/web-interface/index/top/rcmd`);
-        request.withCredentials = true;
-        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-        request.setRequestHeader
-        request.onload = function (res) {
-            try {
-                var list = JSON.parse(res.target.response);
-                if (list.code != 0) {
-                    console.log(`获取推荐数据失败 code ${list.code}</br>msg:${list.message}`, { list, target });
-                    return;
-                } else {
-                    recommendData.push.apply(recommendData, list.data.item);
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: 'https://app.bilibili.com/x/feed/index?build=1&mobi_app=android&idx='
+                + (Date.now() / 1000).toFixed(0) + (accessKey ? '&access_key=' + accessKey : ''),
+            onload: res => {
+                try {
+                    var list = JSON.parse(res.response);
+                    if (list.code != 0) {
+                        console.log(`获取推荐数据失败 code ${list.code}</br>msg:${list.message}`);
+                        return;
+                    } else {
+                        recommendData.push.apply(recommendData, list.data);
+                    }
+                } catch (e) {
+                    console.log("获取推荐数据失败");
                 }
-            } catch (e) {
-                console.log("获取推荐数据失败");
+            },
+            onerror: e => {
+                console.error(e, '请求app首页发生错误');
             }
-        };
-        request.send(`fresh_type=3&fresh_idx=${num}&fresh_idx_1h=${num}&homepage_ver=0`);
+        });
     }
 
     var previewDict = {};
@@ -424,5 +427,35 @@
             };
             req.send(`aid=${id}&csrf=${getCookie("bili_jct")}`);
         }
+    }
+
+    function getAccessKey() {
+        // 获取AccessKey
+        fetch('https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3' +
+            '&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a', {
+            method: 'GET',
+            credentials: 'include',
+        }).then(async res => {
+            try {
+                return await res.json();
+            } catch (e) {
+                console.warn("请求接口错误");
+            }
+        }).then(data => {
+            return data.data.confirm_uri
+        }).then(url => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                headers: { cookie: document.cookie },
+                onload: function (resp) {
+                    accessKey = resp.finalUrl.match(/access_key=([0-9a-z]{32})/)[1];
+                    GM_setValue("accessKey", accessKey)
+                },
+                onerror: function (e) {
+                    console.error("获取失败");
+                },
+            })
+        })
     }
 })();
