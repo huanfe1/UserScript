@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    http://tampermonkey.net/
-// @version      0.5.5
+// @version      0.5.6
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -22,7 +22,7 @@
     var url = window.location.href;
     var style = "";
     var recommendData = new Array();
-    var accessKey = GM_getValue("accessKey") ? GM_getValue("accessKey") : ""
+    var accessKey = GM_getValue("accessKey") ? GM_getValue("accessKey") : "";
 
     if (url.split("/")[2] == "www.bilibili.com") {
         switch (url.split("/")[3]) {
@@ -68,7 +68,9 @@
         let timer = setInterval(function () {
             if (document.querySelector("aside.right")) {
                 clearInterval(timer);
-                if (!accessKey) {getAccessKey()};
+                if (!accessKey) {
+                    getAccessKey();
+                }
                 setRecommend();
                 getRecommendData();
                 scrollRefsh();
@@ -185,14 +187,18 @@
         // 添加推荐视频
         let data = recommendData.pop();
         let text = `
-        <a href="https://www.bilibili.com${data.goto == 'av' ? `/video/av${data.param}` : data.uri}" target="_blank"><img src="${data.cover}@672w_378h" alt="${data.title}" />
+        <a href="https://www.bilibili.com${data.goto == "av" ? `/video/av${data.param}` : data.uri}" target="_blank"><img src="${data.cover}@672w_378h" alt="${
+            data.title
+        }" />
             <div class="preview_pic"></div>
             <div class="timeshow">${numConverter.time(data.duration)}</div>
             <div class="video_mark">
                 <div class="video_mark_text">稍后在看</div>
             </div>
         </a>
-        <div class="bilibili_recommend_text"><a href="${data.goto == 'av' ? `/video/av${data.param}` : data.uri}" target="_blank">${data.title}</a></div>
+        <div class="bilibili_recommend_text"><a href="https://www.bilibili.com${data.goto == "av" ? `/video/av${data.param}` : data.uri}" target="_blank">${
+            data.title
+        }</a></div>
         <div class="recommend_info">
             <a href="https://space.bilibili.com/${data.mid}" class="playinfo" target="_blank"><svg width="18" height="16"
                     viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg">
@@ -212,7 +218,7 @@
         </div>
         `;
         let dom = document.createElement("div");
-        dom.className = "bilibili_recommend";
+        dom.className = "recommend_content";
         dom.innerHTML = text;
         document.getElementById("dynamic_recommend").appendChild(dom);
         // 悬浮预览
@@ -229,10 +235,12 @@
     function getRecommendData() {
         // 获取推荐API数据
         GM_xmlhttpRequest({
-            method: 'GET',
-            url: 'https://app.bilibili.com/x/feed/index?build=1&mobi_app=android&idx='
-                + (Date.now() / 1000).toFixed(0) + (accessKey ? '&access_key=' + accessKey : ''),
-            onload: res => {
+            method: "GET",
+            url:
+                "https://app.bilibili.com/x/feed/index?build=1&mobi_app=android&idx=" +
+                (Date.now() / 1000).toFixed(0) +
+                (accessKey ? "&access_key=" + accessKey : ""),
+            onload: (res) => {
                 try {
                     var list = JSON.parse(res.response);
                     if (list.code != 0) {
@@ -245,9 +253,9 @@
                     console.log("获取推荐数据失败");
                 }
             },
-            onerror: e => {
-                console.error(e, '请求app首页发生错误');
-            }
+            onerror: (e) => {
+                console.error(e, "请求app首页发生错误");
+            },
         });
     }
 
@@ -307,11 +315,11 @@
         view(num) {
             num = Number(num);
             if (Math.abs(num) > 100000000) {
-                return (num / 100000000).toFixed(2) + "亿";
+                return (num / 100000000).toFixed(1) + "亿";
             } else if (Math.abs(num) > 10000) {
-                return (num / 10000).toFixed(2) + "万";
+                return (num / 10000).toFixed(1) + "万";
             } else {
-                return num.toFixed(2);
+                return num.toFixed(0);
             }
         },
         // 时间换算
@@ -333,14 +341,13 @@
         // 悬停预览
         let seed;
         let previewDom = dom.querySelector(".preview_pic");
-
-        dom.addEventListener("mouseenter", function () {
+        dom.querySelector("a").addEventListener("mouseenter", function () {
             seed = setTimeout(function () {
                 previewDom.style.display = "block";
                 setPreview(previewDom, aid);
             }, 300);
         });
-        dom.addEventListener("mouseleave", function () {
+        dom.querySelector("a").addEventListener("mouseleave", function () {
             if (previewDom.style.display) {
                 previewDom.style.display = "none";
             }
@@ -355,7 +362,7 @@
         if (!arr) {
             return null;
         }
-        return arr[2]; //第2个分组匹配对应cookie的value
+        return arr[2];
     }
 
     function scrollRefsh() {
@@ -431,31 +438,45 @@
 
     function getAccessKey() {
         // 获取AccessKey
-        fetch('https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3' +
-            '&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a', {
-            method: 'GET',
-            credentials: 'include',
-        }).then(async res => {
-            try {
-                return await res.json();
-            } catch (e) {
-                console.warn("请求接口错误");
-            }
-        }).then(data => {
-            return data.data.confirm_uri
-        }).then(url => {
-            GM_xmlhttpRequest({
+        fetch(
+            "https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3" +
+                "&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a",
+            {
                 method: "GET",
-                url: url,
-                headers: { cookie: document.cookie },
-                onload: function (resp) {
-                    accessKey = resp.finalUrl.match(/access_key=([0-9a-z]{32})/)[1];
-                    GM_setValue("accessKey", accessKey)
-                },
-                onerror: function (e) {
-                    console.error("获取失败");
-                },
+                credentials: "include",
+            }
+        )
+            .then(async (res) => {
+                try {
+                    return await res.json();
+                } catch (e) {
+                    console.warn("请求接口错误");
+                }
             })
-        })
+            .then((data) => {
+                if (data.code || !data.data) {
+                    throw { msg: data.msg || data.message || data.code, data };
+                } else if (!data.data.has_login) {
+                    throw { msg: "你必须登录B站之后才能使用授权", data };
+                } else if (!data.data.confirm_uri) {
+                    throw { msg: "无法获得授权网址", data };
+                } else {
+                    return data.data.confirm_uri;
+                }
+            })
+            .then((url) => {
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: url,
+                    headers: { cookie: document.cookie },
+                    onload: function (resp) {
+                        accessKey = resp.finalUrl.match(/access_key=([0-9a-z]{32})/)[1];
+                        GM_setValue("accessKey", accessKey);
+                    },
+                    onerror: function (e) {
+                        console.error("获取失败");
+                    },
+                });
+            });
     }
 })();
