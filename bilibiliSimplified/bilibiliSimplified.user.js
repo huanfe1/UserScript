@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    http://tampermonkey.net/
-// @version      0.5.7
+// @version      0.6.0
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -47,13 +47,9 @@
     }
 
     GM_addStyle(style);
+    console.log("样式表已添加");
 
-    function homePage() {
-        style += ".bili-grid:nth-child(3), .bili-grid:nth-child(4){display:none}"; // 去除推广
-        // style += ".battle-area{display:none}"
-        //去除广告
-        style += ".eva-banner{display:none}";
-    }
+    function homePage() {}
 
     function dynamic() {
         // 精选评论
@@ -81,8 +77,6 @@
     }
 
     function videoPlay() {
-        // 提示弹窗
-        style += ".bilibili-player-video-popup{display:none !important;}";
         // 播放页关注按钮
         style += ".bilibili-player-video-top-follow{display:none !important;}";
         // 广告
@@ -98,16 +92,30 @@
         // 活动
         style += ".activity-m-v1{display:none;}";
         // 充电页面
-        style += ".bilibili-player-electric-panel{opacity:0;}";
+        style += ".bpx-player-electric-wrap{opacity:0;}";
+        // 联合创作页面作者头像下面的关注按钮
+        style += ".attention{display:none !important;}";
 
-        // 跳过充电页面
-        document.querySelector("div.bilibili-player-video > *").addEventListener("ended", function () {
-            let timer = setInterval(function () {
-                if (document.querySelector(".bilibili-player-electric-panel")) {
-                    document.querySelector("div.bilibili-player-electric-panel-jump").click();
-                    clearInterval(timer);
+        let timer = setInterval(function () {
+            if (document.querySelector(".bilibili-player-popup-padding")) {
+                // 跳过充电页面
+                document.querySelector("div.bilibili-player-video > *").addEventListener("ended", function () {
+                    let timer = setInterval(function () {
+                        if (document.querySelector(".bilibili-player-electric-panel")) {
+                            document.querySelector("div.bilibili-player-electric-panel-jump").click();
+                            console.log("跳过充电页面");
+                            clearInterval(timer);
+                        }
+                    });
+                });
+
+                // 删除播放窗口弹出窗口
+                if (document.querySelector(".bilibili-player-popup-padding")) {
+                    document.querySelector(".bilibili-player-popup-padding").remove();
+                    console.log("删除弹出窗口");
                 }
-            });
+                clearInterval(timer);
+            }
         });
     }
 
@@ -126,35 +134,39 @@
         // 设置推荐元素
         let style = `
         .recommend_switch{display:flex;align-items:center;margin:0 15px 0 auto}
-        .recommend_switch p{color:#6d757a;font-size:14px;line-height:100%}
-        .switch_button{position:relative;margin-left:15px;width:35px;height:20px;border-radius:10px;background:#9499a0;cursor:pointer}
-        .switch_button::before{position:absolute;top:2px;left:3px;width:16px;height:16px;border-radius:100%;background-color:#fff;content:'';transition:all .2s}
-        .switch_button.on{background:#00a1d6}
+        .recommend_switch p{color:#6D757A;font-size:14px;line-height:100%}
+        .switch_button{position:relative;margin-left:15px;width:35px;height:20px;border-radius:10px;background:#9499A0;cursor:pointer}
+        .switch_button::before{position:absolute;top:2px;left:3px;width:16px;height:16px;border-radius:100%;background-color:#FFFFFF;content:'';transition:all 0.2s}
+        .switch_button.on{background:#00A1D6}
         .switch_button.on::before{left:16px}
-        .recommend_content{margin-bottom:8px;padding:10px;border-radius:5px;background-color:#fff}
+        .recommend_content{margin-bottom:8px;padding:10px;border-radius:5px;background-color:#FFFFFF}
         .video_content{position:relative;display:flex;width:100%}
         .video_content .preview_pic{position:absolute;top:0;width:100%;height:-moz-available;height:-webkit-fill-available}
         .video_content img{width:100%}
         .video_content:hover .video_mask{opacity:0}
-        .video_mask{position:absolute;bottom:0;display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;padding:16px 8px 6px;width:100%;background-image:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0.8) 100%);color:#fff;font-size:14px;font-size:13px;line-height:18px;transition:opacity 1s}
+        .video_mask{position:absolute;bottom:0;display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;padding:16px 8px 6px;width:100%;background-image:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0.8) 100%);color:#FFFFFF;font-size:14px;font-size:13px;line-height:18px;transition:opacity 1s}
         .video_mask .views{display:flex;align-items:center}
         .video_mask .views svg{margin-right:3px;width:18px;height:18px}
         .video_mask .views .num{margin:0}
         .video_mask .views p:nth-child(2){margin-right:10px}
         .video_mask .duration{height:100%}
         .video_text{margin-top:10px}
-        .video_text a:hover{color:#00aeec}
+        .video_text a:hover{color:#00AEEC}
         .video_text .video_title{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;text-overflow:ellipsis;font-size:16px;-webkit-line-clamp:2;overflow-wrap:anywhere}
-        .video_text .owner{display:flex;margin-top:5px;color:#9499a0;font-size:14px}
+        .video_text .owner{display:flex;margin-top:5px;color:#9499A0;font-size:14px}
         .video_text .owner .up_name{display:flex}
         .video_text .owner .up_name svg{margin-right:5px;width:18px;height:18px}
         .video_text .owner p{margin:0;line-height:18px}
         .video_text .owner .time{margin-left:10px}
         .video_content:hover .video_mark{opacity:1}
-        .video_mark{position:absolute;top:10px;right:10px;width:22px;height:22px;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABT0lEQVQ4je3VMYrCQBTG8b/DWASLNKJgJ1hY2sloZeF2gkeYW+wZvIVXsLBJY5UdtLJLk17EIghCwChukWRxFzSaaLdfMwm8/EgemTclgOl02gEmwAAoky8RsAA+tdbrUoJ+AVZO8G9CoCeJ39Sq1+sopbBtO5e23+8xxrDdbi1gIog/vxAKYNs2Sqn0diBIenoP9X2fIAgyccv66WZZZBXvdjtc18UYkwlfJxM+n8+/1pfBefMPPw4LEZcEQcBqteJ0Or0GrlartFotLpcLnucxm83YbDbFYSEE/X6f4XBIpVLhcDjgOA6u63I8HvPDaRqNBuPxmHa7DcS7cT6f36yXj8IAUkq63S7NZpPlcomUtx9/Ck5Tq9UYjUZ3a976u0UQz9OiCcMwvYwk8XHyYYxBKXU9+p5Grybg4m1Hk9Bar4Ee4JC0JWeixOhprdffE/1yRW/TLMYAAAAASUVORK5CYII=);background-position:50%;background-size:cover;background-repeat:no-repeat;opacity:0;transition:opacity .2s cubic-bezier(0.22,0.58,0.12,0.98)}
+        .video_mark{position:absolute;top:10px;right:10px;width:22px;height:22px;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABT0lEQVQ4je3VMYrCQBTG8b/DWASLNKJgJ1hY2sloZeF2gkeYW+wZvIVXsLBJY5UdtLJLk17EIghCwChukWRxFzSaaLdfMwm8/EgemTclgOl02gEmwAAoky8RsAA+tdbrUoJ+AVZO8G9CoCeJ39Sq1+sopbBtO5e23+8xxrDdbi1gIog/vxAKYNs2Sqn0diBIenoP9X2fIAgyccv66WZZZBXvdjtc18UYkwlfJxM+n8+/1pfBefMPPw4LEZcEQcBqteJ0Or0GrlartFotLpcLnucxm83YbDbFYSEE/X6f4XBIpVLhcDjgOA6u63I8HvPDaRqNBuPxmHa7DcS7cT6f36yXj8IAUkq63S7NZpPlcomUtx9/Ck5Tq9UYjUZ3a976u0UQz9OiCcMwvYwk8XHyYYxBKXU9+p5Grybg4m1Hk9Bar4Ee4JC0JWeixOhprdffE/1yRW/TLMYAAAAASUVORK5CYII=);background-position:50%;background-size:cover;background-repeat:no-repeat;opacity:0;transition:opacity 0.2s cubic-bezier(0.22,0.58,0.12,0.98)}
         .video_mark.active{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABiklEQVQ4jbXVzyvDcRzH8efns1+JIRtbOSiKrMRBrZZC5IzcHJYTJyc1J464ubuY5MQ/oLSTNSHfIg5KyEmbzY/5sa++c/hOCtv47rvX8f2pR+/3u0+fjwAgfNoFLAH9gA1jUYEIECLoU0QOjQIVBsHveQECEr1Ts1By1pJEH9/s9EuM77RQbLIMKACG4QaHhYNBL7EBj3lwtU2yFXDT6rRil8Ic2C4F634XnbU24m8aY9F46bAUsNJdR1+9g6f3LKPROBfp99LhxY5aRhorULUs43sJlFQmfxO/FWMDHpQhL+3VXzdxps3JVEsVAJOHSSK3rwWbsP5WtAhorrSy09vAxH6CeoeFOV8NALPHKTZvnovMBoLwafZ7sc4uWfe76HE70HKnUsDy+SNzJ/dFUciziruMxvBunNXLNFLo6Mb1M/N/RCHPKgAyWpbpoyQHdxmaKi0snD3wYzQj8GfWrtL/4L5S1rdCLYOrSvTvxOxEJBBC/07MygsQkgR9ChAAtiltLWrOCBD0KR9smmovo1v+1QAAAABJRU5ErkJggg==)}
         .video_mark:hover .video_mark_text{opacity:1}
-        .video_mark_text{position:absolute;top:-27px;left:50%;box-sizing:border-box;padding:6px 8px;border-radius:4px;background:rgba(0,0,0,0.7);color:#fff;white-space:nowrap;font-size:12px;line-height:12px;opacity:0;transform:translateX(-50%)}        `;
+        .video_mark_text{position:absolute;top:-27px;left:50%;box-sizing:border-box;padding:6px 8px;border-radius:4px;background:rgba(0,0,0,0.7);color:#FFFFFF;white-space:nowrap;font-size:12px;line-height:12px;opacity:0;transform:translateX(-50%)}
+        .preview_pic{display:none}
+        .preview_bar{box-sizing:border-box;width:100%;height:10px;border:solid #000000;border-top-width:4px;border-right-width:8px;border-bottom-width:4px;border-left-width:8px;background-color:#444444}
+        .bar_content{width:100%;height:2px;background-color:#FFFFFF}
+        `;
         GM_addStyle(style);
 
         let main = document.createElement("div");
@@ -169,7 +181,6 @@
         let button = recommend_switch.querySelector(".switch_button");
         // 按钮点击
         button.onclick = function () {
-            console.log(recommendData);
             if (button.classList.contains("on")) {
                 button.classList.remove("on");
                 GM_setValue("recommend_status", false);
@@ -194,7 +205,9 @@
         let data = recommendData.pop();
         let url = `https://www.bilibili.com${data.goto == "av" ? `/video/av${data.param}` : data.uri}`;
         let text = `
-        <a href="${url}" class="video_content" target="_blank"><div class="preview_pic"></div><img src="${data.cover}@672w_378h" alt="${
+        <a href="${url}" class="video_content" target="_blank"><div class="preview_pic"><div class="preview_bar"><div class="bar_content"></div></div></div></div><img src="${
+            data.cover
+        }@672w_378h" alt="${
             data.title
         }"><div class="video_mark"><div class="video_mark_text"></div></div><div class="video_mask"><div class="views"><svg t="1658670007102" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18155" width="200" height="200"><path d="M800 128H224C134.4 128 64 198.4 64 288v448c0 89.6 70.4 160 160 160h576c89.6 0 160-70.4 160-160V288c0-89.6-70.4-160-160-160z m96 608c0 54.4-41.6 96-96 96H224c-54.4 0-96-41.6-96-96V288c0-54.4 41.6-96 96-96h576c54.4 0 96 41.6 96 96v448z" p-id="18156" fill="#ffffff"></path><path d="M684.8 483.2l-256-112c-22.4-9.6-44.8 6.4-44.8 28.8v224c0 22.4 22.4 38.4 44.8 28.8l256-112c25.6-9.6 25.6-48 0-57.6z" p-id="18157" fill="#ffffff"></path></svg><p class="num">                ${numConverter.view(
             data.play
@@ -218,11 +231,6 @@
         hoverPreview(dom, data.param);
         // 添加稍后在看
         addMarkVideo(dom.querySelector(".video_mark"), data.param);
-        // 防止 Mixed Content 提示
-        // let el = document.createElement("meta");
-        // el.setAttribute("http-equiv", "Content-Security-Policy");
-        // el.setAttribute("content", "upgrade-insecure-requests");
-        // document.head.append(el);
     }
 
     function getRecommendData() {
@@ -237,70 +245,19 @@
                 try {
                     var list = JSON.parse(res.response);
                     if (list.code != 0) {
-                        console.log(`获取推荐数据失败 code ${list.code}</br>msg:${list.message}`);
+                        console.error(`获取推荐数据失败 code ${list.code}</br>msg:${list.message}`);
                         return;
                     } else {
                         recommendData.push.apply(recommendData, list.data);
                     }
                 } catch (e) {
-                    console.log("获取推荐数据失败");
+                    console.error("获取推荐数据失败");
                 }
             },
             onerror: (e) => {
                 console.error(e, "请求app首页发生错误");
             },
         });
-    }
-
-    var previewDict = {};
-    function setPreview(preDom, id) {
-        // 设置预览图
-        if (!previewDict[id]) {
-            GM_xmlhttpRequest({
-                method: "GET",
-                url: `https://api.bilibili.com/x/player/videoshot?aid=${id}&index=1`,
-                onload: function (response) {
-                    let text = JSON.parse(response.responseText);
-                    previewDict[id] = text.data;
-                },
-                onerror: function () {
-                    console.error("获取封面出错");
-                },
-            });
-        }
-
-        let timer = setInterval(function () {
-            if (previewDict[id]) {
-                clearInterval(timer);
-                changePreview();
-            }
-        });
-
-        function changePreview() {
-            let frameAll = previewDict[id].index.length;
-            let now_frame = 0;
-            let framePage = 0;
-            preDom.style.display == "block";
-            preDom.style.backgroundSize = "2800px";
-            preDom.style.backgroundPosition = "0px 0px";
-            let previewTimer = setInterval(function () {
-                if (preDom.style.display == "none") {
-                    clearInterval(previewTimer);
-                } else {
-                    preDom.style.backgroundImage = `url(${previewDict[id].image[framePage]})`;
-                    preDom.style.backgroundPosition = `-${(now_frame % 10) * 280 + 15}px -${~~((now_frame % 100) / 10) * 158}px`;
-
-                    now_frame += 1;
-                    if (now_frame % 100 == 0) {
-                        framePage += 1;
-                    }
-                    if (now_frame >= frameAll - 1) {
-                        now_frame = 1;
-                        framePage = 0;
-                    }
-                }
-            }, 300);
-        }
     }
 
     const numConverter = {
@@ -315,7 +272,7 @@
                 return num.toFixed(0);
             }
         },
-        // 时间换算
+        // 时长换算
         duration(num) {
             let second = num % 60;
             let minute = Math.floor(num / 60);
@@ -350,19 +307,62 @@
     function hoverPreview(dom, aid) {
         // 悬停预览
         let seed;
-        let previewDom = dom.querySelector(".preview_pic");
-        dom.querySelector("a").addEventListener("mouseenter", function () {
+        let hoverDom = dom.querySelector("a");
+        let picDom = dom.querySelector(".preview_pic");
+        let bar = dom.querySelector(".bar_content");
+        hoverDom.addEventListener("mouseenter", function (e) {
             seed = setTimeout(function () {
-                previewDom.style.display = "block";
-                setPreview(previewDom, aid);
+                // 鼠标悬停事件
+                getPic();
             }, 300);
         });
-        dom.querySelector("a").addEventListener("mouseleave", function () {
-            if (previewDom.style.display) {
-                previewDom.style.display = "none";
+        hoverDom.addEventListener("mousemove", function (e) {
+            // 鼠标移动事件
+            if (picDom.dataset.num) {
+                setPic(e.offsetX);
             }
+        });
+        hoverDom.addEventListener("mouseleave", function () {
+            // 鼠标离开事件
+            picDom.style.display = "none";
             clearTimeout(seed);
         });
+
+        function getPic() {
+            if (picDom.dataset.num) {
+                picDom.style.display = "block";
+            } else {
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: `https://api.bilibili.com/x/player/videoshot?aid=${aid}&index=1`,
+                    onload: function (response) {
+                        try {
+                            let text = JSON.parse(response.responseText);
+                            let data = text.data;
+                            picDom.dataset.num = data.index.length >= 99 ? 99 : data.index.length;
+                            picDom.style.backgroundImage = `url(${data.image[0]})`;
+                            picDom.style.backgroundPosition = "0px 0px";
+                            picDom.style.backgroundSize = "2800px";
+                            picDom.style.display = "block";
+                        } catch {
+                            console.error("获取封面出错");
+                        }
+                    },
+                    onerror: function () {
+                        console.error("获取封面出错");
+                    },
+                });
+            }
+        }
+
+        function setPic(offsetX) {
+            // 根据鼠标位置更改背景位置
+            if (picDom.dataset.num) {
+                let num = ~~((offsetX / picDom.offsetWidth) * picDom.dataset.num);
+                picDom.style.backgroundPosition = `-${(num % 10) * 280 + 15}px -${~~((num % 100) / 10) * 158}px`;
+                bar.style.width = `${~~((offsetX / picDom.offsetWidth) * 100)}%`;
+            }
+        }
     }
 
     function getCookie(key) {
@@ -459,7 +459,7 @@
             .then(async (res) => {
                 try {
                     return await res.json();
-                } catch (e) {
+                } catch {
                     console.warn("请求接口错误");
                 }
             })
