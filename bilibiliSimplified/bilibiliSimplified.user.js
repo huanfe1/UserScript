@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
-// @namespace    http://tampermonkey.net/
-// @version      0.6.0
+// @namespace    https://github.com/huanfeiiiii/UserScript/tree/main/bilibiliSimplified
+// @version      0.6.1
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -20,38 +20,35 @@
 // ==/UserScript==
 
 (function () {
-    "use strict";
-    var url = window.location.href;
     var style = "";
     var recommendData = new Array();
     var accessKey = GM_getValue("accessKey") ? GM_getValue("accessKey") : "";
 
-    if (url.split("/")[2] == "www.bilibili.com") {
-        switch (url.split("/")[3]) {
-            case "":
-                console.log("首页");
-                homePage();
-                break;
-            case "video":
-                console.log("播放页");
-                videoPlay();
-                break;
-            case "read":
-                console.log("文章页");
-                readPage();
-                break;
-        }
-    } else if (url.split("/")[2] == "t.bilibili.com") {
+    const url = window.location.href.match("[a-zA-z]+://(.*)/")[1];
+    if (url == "www.bilibili.com") {
+        console.log("首页");
+        homePage();
+    } else if (url == "t.bilibili.com") {
         console.log("动态");
-        dynamic();
+        dynamicPage();
+    } else if (url.match("www.bilibili.com/(.*)")) {
+        if (url.split("/")[1] == "video") {
+            console.log("视频播放页");
+            videoPlayPage();
+        } else if (url.match("www.bilibili.com/(.*)")[1] == "read") {
+            console.log("专栏页");
+            readPage();
+        }
+    } else if (url.includes("space.bilibili.com")) {
+        console.log("个人空间");
+        spacePage();
     }
 
     GM_addStyle(style);
-    console.log("样式表已添加");
 
     function homePage() {}
 
-    function dynamic() {
+    function dynamicPage() {
         // 精选评论
         style += ".bili-dyn-item__interaction{display:none;}";
         // 右上角贴纸
@@ -76,47 +73,19 @@
         });
     }
 
-    function videoPlay() {
-        // 播放页关注按钮
-        style += ".bilibili-player-video-top-follow{display:none !important;}";
-        // 广告
-        style += ".ad-report{display:none !important}";
+    function videoPlayPage() {
         // 头像框
         style += ".bili-avatar-pendent-dom{display:none;}";
         // 右上角贴纸
         style += ".reply-decorate{display:none;}";
-        // 粉丝牌
-        style += ".fan-badge{display:none !important;}";
         // 大家都围观的直播
         style += ".pop-live-small-mode{display:none;}";
         // 活动
         style += ".activity-m-v1{display:none;}";
-        // 充电页面
-        style += ".bpx-player-electric-wrap{opacity:0;}";
-        // 联合创作页面作者头像下面的关注按钮
+        // 联合创作页面作者头像下面的关注按钮,防止误触
         style += ".attention{display:none !important;}";
-
-        let timer = setInterval(function () {
-            if (document.querySelector(".bilibili-player-popup-padding")) {
-                // 跳过充电页面
-                document.querySelector("div.bilibili-player-video > *").addEventListener("ended", function () {
-                    let timer = setInterval(function () {
-                        if (document.querySelector(".bilibili-player-electric-panel")) {
-                            document.querySelector("div.bilibili-player-electric-panel-jump").click();
-                            console.log("跳过充电页面");
-                            clearInterval(timer);
-                        }
-                    });
-                });
-
-                // 删除播放窗口弹出窗口
-                if (document.querySelector(".bilibili-player-popup-padding")) {
-                    document.querySelector(".bilibili-player-popup-padding").remove();
-                    console.log("删除弹出窗口");
-                }
-                clearInterval(timer);
-            }
-        });
+        // 去除弹幕弹窗
+        style += ".bpx-player-cmd-dm-wrap{display:none !important;}";
     }
 
     function readPage() {
@@ -126,6 +95,18 @@
                 item.oncopy = function (e) {
                     e.stopPropagation();
                 };
+            });
+        };
+    }
+
+    function spacePage() {
+        // 解决选择视频排序时,页面序号没有回到第一个的问题
+        let buttons = document.getElementsByClassName("be-tab-input");
+        window.onload = function () {
+            buttons.forEach(function (e) {
+                e.addEventListener("change", function () {
+                    document.querySelector("#submit-video-list > ul.be-pager > li:nth-child(2)").click()
+                });
             });
         };
     }
@@ -287,7 +268,6 @@
         },
         // 时间戳换算
         getTime(timestamp) {
-            let time;
             let date = new Date(parseInt(timestamp) * 1000);
             let Year = date.getFullYear();
             let Moth = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
@@ -297,10 +277,10 @@
             let Sechond = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
             let GMT = Year + "-" + Moth + "-" + Day + " " + Hour + ":" + Minute + ":" + Sechond;
             let miniGMT = Moth + "-" + Day;
-            return (time = {
+            return {
                 full: GMT,
                 mini: miniGMT,
-            });
+            };
         },
     };
 
@@ -366,8 +346,8 @@
     }
 
     function getCookie(key) {
-        const str = `(^| )${key}=([^;]*)(;|$)`;
-        const reg = new RegExp(str);
+        const reg = `(^| )${key}=([^;]*)(;|$)`;
+        console.log(document.cookie);
         const arr = document.cookie.match(reg);
         if (!arr) {
             return null;
