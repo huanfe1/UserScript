@@ -7,7 +7,7 @@
 * 去除头像边框
 * 将右侧话题栏变为视频推荐栏
 
-![image](https://img2022.cnblogs.com/blog/2661944/202205/2661944-20220529110631424-390964363.png)
+![image](https://s2.loli.net/2022/08/18/JhuCbmT9GUPsYwQ.png)
 
 ## 播放页
 
