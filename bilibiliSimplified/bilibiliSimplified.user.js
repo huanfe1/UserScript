@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://github.com/huanfeiiiii/UserScript/tree/main/bilibiliSimplified
-// @version      0.6.1
+// @version      0.6.2
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -20,7 +20,6 @@
 // ==/UserScript==
 
 (function () {
-    var style = "";
     var recommendData = new Array();
     var accessKey = GM_getValue("accessKey") ? GM_getValue("accessKey") : "";
 
@@ -44,21 +43,10 @@
         spacePage();
     }
 
-    GM_addStyle(style);
-
     function homePage() {}
 
     function dynamicPage() {
-        // 精选评论
-        style += ".bili-dyn-item__interaction{display:none;}";
-        // 右上角贴纸
-        style += ".bili-dyn-item__ornament{display:none;}";
-        // 头像边框
-        style += ".bili-avatar-pendent-dom{display:none;}";
-        // 右上角按钮
-        style += ".bili-dyn-item__more{display:none;}";
-        // 右边话题
-        style += "aside.right .sticky{display:none;}";
+        hideDom([".bili-dyn-item__interaction", ".bili-dyn-item__ornament", ".bili-avatar-pendent-dom", "aside.right .sticky"]);
 
         let timer = setInterval(function () {
             if (document.querySelector("aside.right")) {
@@ -74,28 +62,44 @@
     }
 
     function videoPlayPage() {
-        // 头像框
-        style += ".bili-avatar-pendent-dom{display:none;}";
-        // 右上角贴纸
-        style += ".reply-decorate{display:none;}";
-        // 大家都围观的直播
-        style += ".pop-live-small-mode{display:none;}";
-        // 活动
-        style += ".activity-m-v1{display:none;}";
-        // 联合创作页面作者头像下面的关注按钮,防止误触
-        style += ".attention{display:none !important;}";
-        // 去除弹幕弹窗
-        style += ".bpx-player-cmd-dm-wrap{display:none !important;}";
+        hideDom([
+            ".bili-avatar-pendent-dom",
+            ".reply-decorate",
+            ".pop-live-small-mode",
+            ".activity-m-v1",
+            ".attention",
+            ".bpx-player-cmd-dm-wrap",
+            ".reply-notice",
+            ".ad-report",
+        ]);
+
+        // 删去投票弹窗弹幕
+        let keyword = ["1", "2", "3", "4", "5"];
+        let timer = setInterval(function () {
+            if (document.querySelectorAll(".bpx-player-popup > *").length != 0) {
+                document.querySelectorAll(".bpx-player-popup-vote-an-text-doc").forEach((e) => {
+                    keyword.push(e.innerHTML);
+                });
+                clearInterval(timer);
+            }
+        });
+
+        setInterval(function () {
+            let danmaku = document.querySelectorAll(".b-danmaku");
+            danmaku.forEach((e) => {
+                if (keyword.includes(e.innerHTML) && !e.classList.contains("b-danmaku-hide")) {
+                    e.classList.add("b-danmaku-hide");
+                }
+            });
+        });
     }
 
     function readPage() {
         // 专栏去除复制小尾巴
-        window.onload = function () {
-            [...document.querySelectorAll("*")].forEach((item) => {
-                item.oncopy = function (e) {
-                    e.stopPropagation();
-                };
-            });
+        HTMLDivElement.prototype.realAddEventListener = HTMLAnchorElement.prototype.addEventListener;
+        HTMLDivElement.prototype.addEventListener = function (a, b, c) {
+            if (a == "copy") return;
+            return this.realAddEventListener(a, b, c);
         };
     }
 
@@ -105,7 +109,7 @@
         window.onload = function () {
             buttons.forEach(function (e) {
                 e.addEventListener("change", function () {
-                    document.querySelector("#submit-video-list > ul.be-pager > li:nth-child(2)").click()
+                    document.querySelector("#submit-video-list > ul.be-pager > li:nth-child(2)").click();
                 });
             });
         };
@@ -202,7 +206,7 @@
             data.mid
         }" target="_blank"><svg width="18" height="16" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 2.0625C6.85812 2.0625 4.98983 2.1725 3.67735 2.2798C2.77861 2.35327 2.08174 3.04067 2.00119 3.93221C1.90388 5.00924 1.8125 6.43727 1.8125 8C1.8125 9.56273 1.90388 10.9908 2.00119 12.0678C2.08174 12.9593 2.77861 13.6467 3.67735 13.7202C4.98983 13.8275 6.85812 13.9375 9 13.9375C11.1421 13.9375 13.0105 13.8275 14.323 13.7202C15.2216 13.6467 15.9184 12.9595 15.9989 12.0682C16.0962 10.9916 16.1875 9.56386 16.1875 8C16.1875 6.43614 16.0962 5.00837 15.9989 3.9318C15.9184 3.04049 15.2216 2.3533 14.323 2.27983C13.0105 2.17252 11.1421 2.0625 9 2.0625ZM3.5755 1.03395C4.9136 0.924562 6.81674 0.8125 9 0.8125C11.1835 0.8125 13.0868 0.924583 14.4249 1.03398C15.9228 1.15645 17.108 2.31588 17.2438 3.81931C17.3435 4.92296 17.4375 6.38948 17.4375 8C17.4375 9.61052 17.3435 11.077 17.2438 12.1807C17.108 13.6841 15.9228 14.8436 14.4249 14.966C13.0868 15.0754 11.1835 15.1875 9 15.1875C6.81674 15.1875 4.9136 15.0754 3.5755 14.966C2.07738 14.8436 0.892104 13.6838 0.756256 12.1803C0.656505 11.0762 0.5625 9.60942 0.5625 8C0.5625 6.39058 0.656505 4.92379 0.756257 3.81973C0.892104 2.31616 2.07738 1.15643 3.5755 1.03395ZM4.41663 4.93726C4.72729 4.93726 4.97913 5.1891 4.97913 5.49976V8.62476C4.97913 9.34963 5.56675 9.93726 6.29163 9.93726C7.0165 9.93726 7.60413 9.34963 7.60413 8.62476V5.49976C7.60413 5.1891 7.85597 4.93726 8.16663 4.93726C8.47729 4.93726 8.72913 5.1891 8.72913 5.49976V8.62476C8.72913 9.97095 7.63782 11.0623 6.29163 11.0623C4.94543 11.0623 3.85413 9.97095 3.85413 8.62476V5.49976C3.85413 5.1891 4.10597 4.93726 4.41663 4.93726ZM10.2501 4.93726C9.9394 4.93726 9.68756 5.1891 9.68756 5.49976V10.4998C9.68756 10.8104 9.9394 11.0623 10.2501 11.0623C10.5607 11.0623 10.8126 10.8104 10.8126 10.4998V9.60392H12.2292C13.5179 9.60392 14.5626 8.55925 14.5626 7.27059C14.5626 5.98193 13.5179 4.93726 12.2292 4.93726H10.2501ZM12.2292 8.47892H10.8126V6.06226H12.2292C12.8966 6.06226 13.4376 6.60325 13.4376 7.27059C13.4376 7.93793 12.8966 8.47892 12.2292 8.47892Z"></path></svg><p>${
             data.name
-        }</p></a><p class="time" title="${numConverter.getTime(data.ctime).full}">${numConverter.getTime(data.ctime).mini}</p></div></div>
+        }</p></a><p class="time" title="${numConverter.timeStamp(data.ctime).full}">${numConverter.timeStamp(data.ctime).mini}</p></div></div>
         `;
         let dom = document.createElement("div");
         dom.className = "recommend_content";
@@ -235,8 +239,8 @@
                     console.error("获取推荐数据失败");
                 }
             },
-            onerror: (e) => {
-                console.error(e, "请求app首页发生错误");
+            onerror: () => {
+                console.error("获取推荐数据失败");
             },
         });
     }
@@ -267,7 +271,7 @@
             return hour ? `${hour}:${minute}:${second}` : `${minute}:${second}`;
         },
         // 时间戳换算
-        getTime(timestamp) {
+        timeStamp(timestamp) {
             let date = new Date(parseInt(timestamp) * 1000);
             let Year = date.getFullYear();
             let Moth = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
@@ -347,7 +351,6 @@
 
     function getCookie(key) {
         const reg = `(^| )${key}=([^;]*)(;|$)`;
-        console.log(document.cookie);
         const arr = document.cookie.match(reg);
         if (!arr) {
             return null;
@@ -415,11 +418,11 @@
                 try {
                     var list = JSON.parse(res.target.response);
                     if (list.code != 0) {
-                        console.log(`请求稍后再看错误 code ${list.code}</br>msg:${list.message}`, { list, target });
+                        console.error(`请求稍后再看错误 code ${list.code}</br>msg:${list.message}`, { list, target });
                         return;
                     }
                 } catch (e) {
-                    console.log("请求稍后再看发生错误");
+                    console.error("请求稍后再看发生错误");
                 }
             };
             req.send(`aid=${id}&csrf=${getCookie("bili_jct")}`);
@@ -469,5 +472,13 @@
                     },
                 });
             });
+    }
+
+    function hideDom(element) {
+        let style = "";
+        element.forEach(function (e) {
+            style += `${e}{display:none !important;}`;
+        });
+        GM_addStyle(style);
     }
 })();
