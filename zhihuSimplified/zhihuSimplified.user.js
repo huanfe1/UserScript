@@ -16,7 +16,6 @@
     var url = window.location.href;
 
     var style = '';
-
     var thirdLevel = url.split(".")[0].split("/")[2];
 
     switch (thirdLevel) {
@@ -62,7 +61,7 @@
     function homePage() {
         style += '.Topstory-mainColumn{width:inherit}';
         style += '.Topstory-container>.GlobalSideBar{min-width:24%;}';
-        style += '.Topstory-container>.GlobalSideBar>div>.Sticky>:not(:nth-child(2)):not(:nth-child(3)){display:none;}';
+        style += '.Topstory-container > div:nth-child(2){display:none}';
     }
 
 
