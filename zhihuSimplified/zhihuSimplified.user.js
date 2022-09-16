@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
-// @namespace    https://greasyfork.org/zh-CN/scripts/443919
-// @version      0.7.5
+// @namespace    https://ixory.com
+// @version      0.7.6
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        https://www.zhihu.com/*
@@ -67,19 +67,20 @@
 
     function searchPage() {
         style += '.SearchMain{width:inherit;}';
+        style += '.css-knqde{display:none}'
     }
 
 
     function questionPage() {
         style += '.Question-sideColumn{display:none;}';
         style += '.Question-mainColumn, .ListShortcut{width:inherit;}';
+        style += '.AuthorInfo.AnswerItem-authorInfo.AnswerItem-authorInfo--related{max-width: inherit;}'
     }
 
 
     function collectionPage() {
         style += `.CollectionsDetailPage-mainColumn{width:inherit;}`;
-        // style += '.CollectionDetailPageSideBar-cardHeaderLeftLink{display:none;}';
-        style += '.CollectionDetailPageSideBar{min-width:20%}';
+        style += '.CollectionsDetailPage > div:nth-child(2){min-width:20%}';
     }
 
 
@@ -91,13 +92,12 @@
 
 
     function topicPage() {
-        style += '.ContentLayout-mainColumn{width:inherit;}';
-        style += '.ContentLayout-sideColumn{display:none;}';
+        style += '.App-main > div > div:nth-child(1){width:inherit;}';
+        style += '.App-main > div > div:nth-child(2){display:none;}';
     }
 
 
     function columnPage() {
         style += '.css-1f6hmyt{width:100%;}';
-        style += '.css-1xhi2j9{width:60vw}';
     }
 })();
