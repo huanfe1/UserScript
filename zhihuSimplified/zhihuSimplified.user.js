@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://ixory.com
-// @version      0.7.6
+// @version      1.0.1
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        https://www.zhihu.com/*
@@ -14,11 +14,9 @@
 
 (function () {
     var url = window.location.href;
-
     var style = '';
-    var thirdLevel = url.split(".")[0].split("/")[2];
 
-    switch (thirdLevel) {
+    switch (url.split(".")[0].split("/")[2]) {
         case "www":
             switch (url.split("/")[3].split("?")[0]) {
                 case "follow":

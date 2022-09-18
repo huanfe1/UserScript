@@ -1,12 +1,9 @@
-阅读部分页面变宽，去除右侧多余部分
+实现知乎大部分页面主体部分变宽，隐藏侧边栏
 
-现已实现以下页面
+![image.png](https://pic.rmb.bdstatic.com/bjh/21c957573aed366c847f87840b8d78b2.png)
 
-* 主页
-* 问题页
-* 收藏页
-* 个人页面
-* 专栏页
+![image.png](https://pic.rmb.bdstatic.com/bjh/988cd6030f78280305c1c799a8a3bf8e.png)
 
-![image](https://img2022.cnblogs.com/blog/2661944/202205/2661944-20220529112015335-7202466.png)
-![image](https://img2022.cnblogs.com/blog/2661944/202205/2661944-20220529112031965-1446920501.png)
+![image.png](https://pic.rmb.bdstatic.com/bjh/5e5e198ae5c2569d4d61edd83d9dd147.png)
+
+![image.png](https://pic.rmb.bdstatic.com/bjh/07e1797d65fcf629bf3581b9c56f3583.png)
