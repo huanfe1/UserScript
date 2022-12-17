@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://ixory.com
-// @version      0.6.5
+// @version      0.6.6
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -102,11 +102,7 @@
 
     function readPage() {
         // 专栏去除复制小尾巴
-        window.onload = () => {
-            const content = document.getElementById('article-content');
-            const event = getEventListeners(content).copy[0];
-            content.removeEventListener(event.type, event.listener);
-        };
+        window.addEventListener('copy', function(e){e.stopPropagation()}, true)
     }
 
     function spacePage() {}
