@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://ixory.com
-// @version      0.6.4
+// @version      0.6.5
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -20,98 +20,100 @@
 // ==/UserScript==
 
 (function () {
-	var recommendData = new Array();
-	var accessKey = GM_getValue('accessKey') ? GM_getValue('accessKey') : '';
+    var recommendData = new Array();
+    var accessKey = GM_getValue('accessKey') ? GM_getValue('accessKey') : '';
 
-	const url = window.location.href.match('[a-zA-z]+://(.*)/')[1];
-	if (url == 'www.bilibili.com') {
-		console.log('首页');
-		homePage();
-	} else if (url == 't.bilibili.com') {
-		console.log('动态');
-		dynamicPage();
-	} else if (url.match('www.bilibili.com/(.*)')) {
-		if (url.split('/')[1] == 'video') {
-			console.log('视频播放页');
-			videoPlayPage();
-		} else if (url.match('www.bilibili.com/(.*)')[1] == 'read') {
-			console.log('专栏页');
-			readPage();
-		}
-	} else if (url.includes('space.bilibili.com')) {
-		console.log('个人空间');
-		spacePage();
-	}
+    const url = window.location.href.match('[a-zA-z]+://(.*)/')[1];
+    if (url == 'www.bilibili.com') {
+        console.log('首页');
+        homePage();
+    } else if (url == 't.bilibili.com') {
+        console.log('动态');
+        dynamicPage();
+    } else if (url.match('www.bilibili.com/(.*)')) {
+        if (url.split('/')[1] == 'video') {
+            console.log('视频播放页');
+            videoPlayPage();
+        } else if (url.match('www.bilibili.com/(.*)')[1] == 'read') {
+            console.log('专栏页');
+            readPage();
+        }
+    } else if (url.includes('space.bilibili.com')) {
+        console.log('个人空间');
+        spacePage();
+    }
 
-	function homePage() {}
+    function homePage() {}
 
-	function dynamicPage() {
-		hideDom([
-			'.bili-dyn-item__interaction',
-			'.bili-dyn-item__ornament',
-			'.bili-avatar-pendent-dom',
-			'aside.right .sticky',
-			'.sailing',
-			'.medal',
-			'.nameplate',
-			'.notice-item',
-		]);
+    function dynamicPage() {
+        hideDom([
+            '.bili-dyn-item__interaction',
+            '.bili-dyn-item__ornament',
+            '.bili-avatar-pendent-dom',
+            'aside.right .sticky',
+            '.sailing',
+            '.medal',
+            '.nameplate',
+            '.notice-item',
+        ]);
 
-		window.onload = function () {
-			if (!accessKey) {
-				getData.accessKey();
-			}
-			setRecommend();
-			getRecommendData();
-			scrollRefsh();
-		};
-	}
+        // window.onload = function () {
+        //     if (!accessKey) {
+        //         getData.accessKey();
+        //     }
+        //     setRecommend();
+        //     getRecommendData();
+        //     scrollRefsh();
+        // };
+    }
 
-	function videoPlayPage() {
-		hideDom([
-			'.bili-avatar-pendent-dom',
-			'.reply-decorate',
-			'.pop-live-small-mode',
-			'.activity-m-v1',
-			'.attention',
-			'.bpx-player-cmd-dm-wrap',
-			'.reply-notice',
-			'.ad-report',
-		]);
+    function videoPlayPage() {
+        hideDom([
+            '.bili-avatar-pendent-dom',
+            '.reply-decorate',
+            '.pop-live-small-mode',
+            '.activity-m-v1',
+            '.attention',
+            '.bpx-player-cmd-dm-wrap',
+            '.reply-notice',
+            '.ad-report',
+        ]);
 
-		// 删去投票弹窗弹幕
-		let keyword = ['1', '2', '3', '4', '5'];
-		let timer = setInterval(function () {
-			if (document.querySelectorAll('.bpx-player-popup > *').length != 0) {
-				document.querySelectorAll('.bpx-player-popup-vote-an-text-doc').forEach(e => {
-					keyword.push(e.innerHTML);
-				});
-				clearInterval(timer);
-			}
-		});
+        // 删去投票弹窗弹幕
+        let keyword = ['1', '2', '3', '4', '5'];
+        let timer = setInterval(function () {
+            if (document.querySelectorAll('.bpx-player-popup > *').length != 0) {
+                document.querySelectorAll('.bpx-player-popup-vote-an-text-doc').forEach(e => {
+                    keyword.push(e.innerHTML);
+                });
+                clearInterval(timer);
+            }
+        });
 
-		setInterval(function () {
-			let danmaku = document.querySelectorAll('.b-danmaku');
-			danmaku.forEach(e => {
-				if (keyword.includes(e.innerHTML) && !e.classList.contains('b-danmaku-hide')) {
-					e.classList.add('b-danmaku-hide');
-				}
-			});
-		});
-	}
+        setInterval(function () {
+            let danmaku = document.querySelectorAll('.b-danmaku');
+            danmaku.forEach(e => {
+                if (keyword.includes(e.innerHTML) && !e.classList.contains('b-danmaku-hide')) {
+                    e.classList.add('b-danmaku-hide');
+                }
+            });
+        });
+    }
 
-	function readPage() {
-		// 专栏去除复制小尾巴
-		window.onload = () => {
-			document.getElementById('article-content').parentNode.innerHTML += '';
-		};
-	}
+    function readPage() {
+        // 专栏去除复制小尾巴
+        window.onload = () => {
+            const content = document.getElementById('article-content');
+            const event = getEventListeners(content).copy[0];
+            content.removeEventListener(event.type, event.listener);
+        };
+    }
 
-	function spacePage() {}
+    function spacePage() {}
 
-	function setRecommend() {
-		// 设置推荐元素
-		let style = `
+    function setRecommend() {
+        // 设置推荐元素
+        let style = `
         .recommend_switch{display:flex;align-items:center;margin:0 15px 0 auto}
         .recommend_switch p{color:#6D757A;font-size:14px;line-height:100%}
         .switch_button{position:relative;margin-left:15px;width:35px;height:20px;border-radius:10px;background:#9499A0;cursor:pointer}
@@ -146,48 +148,48 @@
         .preview_bar{box-sizing:border-box;width:100%;height:10px;border:solid #000000;border-top-width:4px;border-right-width:8px;border-bottom-width:4px;border-left-width:8px;background-color:#444444}
         .bar_content{width:100%;height:2px;background-color:#FFFFFF}
         `;
-		GM_addStyle(style);
+        GM_addStyle(style);
 
-		let main = document.createElement('div');
-		main.id = 'dynamic_recommend';
-		document.querySelector('aside.right').appendChild(main);
+        let main = document.createElement('div');
+        main.id = 'dynamic_recommend';
+        document.querySelector('aside.right').appendChild(main);
 
-		// 推荐开关
-		let recommend_switch = document.createElement('div');
-		recommend_switch.className = 'recommend_switch';
-		recommend_switch.innerHTML = `<p>推荐视频</p><span class="switch_button ${GM_getValue('recommend_status') ? 'on' : ''}"></span>`;
-		document.querySelector('.bili-dyn-list-tabs__list').appendChild(recommend_switch);
-		let button = recommend_switch.querySelector('.switch_button');
-		// 按钮点击
-		button.onclick = function () {
-			if (button.classList.contains('on')) {
-				button.classList.remove('on');
-				GM_setValue('recommend_status', false);
-			} else {
-				button.classList.add('on');
-				GM_setValue('recommend_status', true);
-			}
-			recommendShow();
-		};
-		recommendShow();
-		function recommendShow() {
-			if (button.classList.contains('on')) {
-				main.style.display = 'block';
-			} else {
-				main.style.display = 'none';
-			}
-		}
-	}
+        // 推荐开关
+        let recommend_switch = document.createElement('div');
+        recommend_switch.className = 'recommend_switch';
+        recommend_switch.innerHTML = `<p>推荐视频</p><span class="switch_button ${GM_getValue('recommend_status') ? 'on' : ''}"></span>`;
+        document.querySelector('.bili-dyn-list-tabs__list').appendChild(recommend_switch);
+        let button = recommend_switch.querySelector('.switch_button');
+        // 按钮点击
+        button.onclick = function () {
+            if (button.classList.contains('on')) {
+                button.classList.remove('on');
+                GM_setValue('recommend_status', false);
+            } else {
+                button.classList.add('on');
+                GM_setValue('recommend_status', true);
+            }
+            recommendShow();
+        };
+        recommendShow();
+        function recommendShow() {
+            if (button.classList.contains('on')) {
+                main.style.display = 'block';
+            } else {
+                main.style.display = 'none';
+            }
+        }
+    }
 
-	function addRecommend() {
-		// 添加推荐视频
-		let data = recommendData.pop();
-		if (!GM_getValue('recommend_status')) {
-			return;
-		}
-		try {
-			let url = `https://www.bilibili.com${data.goto == 'av' ? `/video/av${data.param}` : data.uri}`;
-			let text = `
+    function addRecommend() {
+        // 添加推荐视频
+        let data = recommendData.pop();
+        if (!GM_getValue('recommend_status')) {
+            return;
+        }
+        try {
+            let url = `https://www.bilibili.com${data.goto == 'av' ? `/video/av${data.param}` : data.uri}`;
+            let text = `
             <a href="${url}" class="video_content" target="_blank">
             <div class="preview_pic">
                 <div class="preview_bar">
@@ -227,282 +229,284 @@
             </div>
         </div>
         `;
-			let dom = document.createElement('div');
-			dom.className = 'recommend_content';
-			dom.innerHTML = text;
-			document.getElementById('dynamic_recommend').appendChild(dom);
-			// 悬浮预览
-			hoverPreview(dom, data.param);
-			// 添加稍后在看
-			addMarkVideo(dom.querySelector('.video_mark'), data.param);
+            let dom = document.createElement('div');
+            dom.className = 'recommend_content';
+            dom.innerHTML = text;
+            document.getElementById('dynamic_recommend').appendChild(dom);
+            // 悬浮预览
+            hoverPreview(dom, data.param);
+            // 添加稍后在看
+            addMarkVideo(dom.querySelector('.video_mark'), data.param);
 
-			if (recommendData.length < 3) {
-				getRecommendData();
-			}
-		} catch (err) {}
-	}
+            if (recommendData.length < 3) {
+                getRecommendData();
+            }
+        } catch (err) {}
+    }
 
-	function getRecommendData() {
-		// 获取推荐API数据
-		GM_xmlhttpRequest({
-			method: 'GET',
-			url:
-				'https://app.bilibili.com/x/feed/index?build=1&mobi_app=android&idx=' + (Date.now() / 1000).toFixed(0) + (accessKey ? '&access_key=' + accessKey : ''),
-			onload: res => {
-				try {
-					var list = JSON.parse(res.response);
-					if (list.code != 0) {
-						console.error(`获取推荐数据失败 code ${list.code}</br>msg:${list.message}`);
-						return;
-					} else {
-						recommendData.push.apply(recommendData, list.data);
-					}
-				} catch (e) {
-					console.error('获取推荐数据失败');
-				}
-			},
-			onerror: () => {
-				console.error('获取推荐数据失败');
-			},
-		});
-	}
+    function getRecommendData() {
+        // 获取推荐API数据
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url:
+                'https://app.bilibili.com/x/feed/index?build=1&mobi_app=android&idx=' +
+                (Date.now() / 1000).toFixed(0) +
+                (accessKey ? '&access_key=' + accessKey : ''),
+            onload: res => {
+                try {
+                    var list = JSON.parse(res.response);
+                    if (list.code != 0) {
+                        console.error(`获取推荐数据失败 code ${list.code}</br>msg:${list.message}`);
+                        return;
+                    } else {
+                        recommendData.push.apply(recommendData, list.data);
+                    }
+                } catch (e) {
+                    console.error('获取推荐数据失败');
+                }
+            },
+            onerror: () => {
+                console.error('获取推荐数据失败');
+            },
+        });
+    }
 
-	function hoverPreview(dom, aid) {
-		// 悬停预览
-		let seed;
-		let hoverDom = dom.querySelector('a');
-		let picDom = dom.querySelector('.preview_pic');
-		let bar = dom.querySelector('.bar_content');
-		hoverDom.addEventListener('mouseenter', function (e) {
-			seed = setTimeout(function () {
-				// 鼠标悬停事件
-				getPic();
-			}, 300);
-		});
-		hoverDom.addEventListener('mousemove', function (e) {
-			// 鼠标移动事件
-			if (picDom.dataset.num) {
-				setPic(e.offsetX);
-			}
-		});
-		hoverDom.addEventListener('mouseleave', function () {
-			// 鼠标离开事件
-			picDom.style.display = 'none';
-			clearTimeout(seed);
-		});
+    function hoverPreview(dom, aid) {
+        // 悬停预览
+        let seed;
+        let hoverDom = dom.querySelector('a');
+        let picDom = dom.querySelector('.preview_pic');
+        let bar = dom.querySelector('.bar_content');
+        hoverDom.addEventListener('mouseenter', function (e) {
+            seed = setTimeout(function () {
+                // 鼠标悬停事件
+                getPic();
+            }, 300);
+        });
+        hoverDom.addEventListener('mousemove', function (e) {
+            // 鼠标移动事件
+            if (picDom.dataset.num) {
+                setPic(e.offsetX);
+            }
+        });
+        hoverDom.addEventListener('mouseleave', function () {
+            // 鼠标离开事件
+            picDom.style.display = 'none';
+            clearTimeout(seed);
+        });
 
-		function getPic() {
-			if (picDom.dataset.num) {
-				picDom.style.display = 'block';
-			} else {
-				GM_xmlhttpRequest({
-					method: 'GET',
-					url: `https://api.bilibili.com/x/player/videoshot?aid=${aid}&index=1`,
-					onload: function (response) {
-						try {
-							let text = JSON.parse(response.responseText);
-							let data = text.data;
-							picDom.dataset.num = data.index.length >= 99 ? 99 : data.index.length;
-							picDom.style.backgroundImage = `url(${data.image[0]})`;
-							picDom.style.backgroundPosition = '0px 0px';
-							picDom.style.backgroundSize = '2800px';
-							picDom.style.display = 'block';
-						} catch {
-							console.error('获取封面出错');
-						}
-					},
-					onerror: function () {
-						console.error('获取封面出错');
-					},
-				});
-			}
-		}
+        function getPic() {
+            if (picDom.dataset.num) {
+                picDom.style.display = 'block';
+            } else {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: `https://api.bilibili.com/x/player/videoshot?aid=${aid}&index=1`,
+                    onload: function (response) {
+                        try {
+                            let text = JSON.parse(response.responseText);
+                            let data = text.data;
+                            picDom.dataset.num = data.index.length >= 99 ? 99 : data.index.length;
+                            picDom.style.backgroundImage = `url(${data.image[0]})`;
+                            picDom.style.backgroundPosition = '0px 0px';
+                            picDom.style.backgroundSize = '2800px';
+                            picDom.style.display = 'block';
+                        } catch {
+                            console.error('获取封面出错');
+                        }
+                    },
+                    onerror: function () {
+                        console.error('获取封面出错');
+                    },
+                });
+            }
+        }
 
-		function setPic(offsetX) {
-			// 根据鼠标位置更改背景位置
-			if (picDom.dataset.num) {
-				let num = ~~((offsetX / picDom.offsetWidth) * picDom.dataset.num);
-				picDom.style.backgroundPosition = `-${(num % 10) * 280 + 15}px -${~~((num % 100) / 10) * 158}px`;
-				bar.style.width = `${~~((offsetX / picDom.offsetWidth) * 100)}%`;
-			}
-		}
-	}
+        function setPic(offsetX) {
+            // 根据鼠标位置更改背景位置
+            if (picDom.dataset.num) {
+                let num = ~~((offsetX / picDom.offsetWidth) * picDom.dataset.num);
+                picDom.style.backgroundPosition = `-${(num % 10) * 280 + 15}px -${~~((num % 100) / 10) * 158}px`;
+                bar.style.width = `${~~((offsetX / picDom.offsetWidth) * 100)}%`;
+            }
+        }
+    }
 
-	function scrollRefsh() {
-		// 监听滚动实现自动添加推荐
-		let previous = 0;
-		const fillDom = function () {
-			if ((Date.now() - previous <= 500) | !GM_getValue('recommend_status')) {
-				return;
-			}
-			previous = Date.now();
-			const offsetBottom =
-				document.querySelector('aside.right').offsetHeight -
-				(document.querySelector('aside.right > section').offsetHeight + document.querySelector('#dynamic_recommend').offsetHeight);
-			const addNum = Math.round(offsetBottom / 260);
-			for (let index = 0; index < addNum; index++) {
-				addRecommend();
-			}
-		};
+    function scrollRefsh() {
+        // 监听滚动实现自动添加推荐
+        let previous = 0;
+        const fillDom = function () {
+            if ((Date.now() - previous <= 500) | !GM_getValue('recommend_status')) {
+                return;
+            }
+            previous = Date.now();
+            const offsetBottom =
+                document.querySelector('aside.right').offsetHeight -
+                (document.querySelector('aside.right > section').offsetHeight + document.querySelector('#dynamic_recommend').offsetHeight);
+            const addNum = Math.round(offsetBottom / 260);
+            for (let index = 0; index < addNum; index++) {
+                addRecommend();
+            }
+        };
 
-		let timer = setInterval(function () {
-			if (recommendData[0] != undefined) {
-				fillDom();
-				addRecommend();
-				clearInterval(timer);
-			}
-		});
+        let timer = setInterval(function () {
+            if (recommendData[0] != undefined) {
+                fillDom();
+                addRecommend();
+                clearInterval(timer);
+            }
+        });
 
-		window.onscroll = fillDom;
-	}
+        window.onscroll = fillDom;
+    }
 
-	function addMarkVideo(markVideo, id) {
-		// 添加稍后在看
-		markVideo.addEventListener('mouseenter', function () {
-			if (markVideo.classList.contains('active')) {
-				markVideo.querySelector('.video_mark_text').innerHTML = '移除';
-			} else {
-				markVideo.querySelector('.video_mark_text').innerHTML = '稍后在看';
-			}
-		});
+    function addMarkVideo(markVideo, id) {
+        // 添加稍后在看
+        markVideo.addEventListener('mouseenter', function () {
+            if (markVideo.classList.contains('active')) {
+                markVideo.querySelector('.video_mark_text').innerHTML = '移除';
+            } else {
+                markVideo.querySelector('.video_mark_text').innerHTML = '稍后在看';
+            }
+        });
 
-		markVideo.addEventListener('click', function (e) {
-			// 点击按钮不跳转
-			e.preventDefault();
-			if (markVideo.classList.contains('active')) {
-				markVideo.classList.remove('active');
-				markVideo.querySelector('.video_mark_text').innerHTML = '已从稍后在看列表中移除';
-				markVideoApi('del');
-			} else {
-				markVideo.classList.add('active');
-				markVideo.querySelector('.video_mark_text').innerHTML = '已加稍后在看';
-				markVideoApi('add');
-			}
-		});
+        markVideo.addEventListener('click', function (e) {
+            // 点击按钮不跳转
+            e.preventDefault();
+            if (markVideo.classList.contains('active')) {
+                markVideo.classList.remove('active');
+                markVideo.querySelector('.video_mark_text').innerHTML = '已从稍后在看列表中移除';
+                markVideoApi('del');
+            } else {
+                markVideo.classList.add('active');
+                markVideo.querySelector('.video_mark_text').innerHTML = '已加稍后在看';
+                markVideoApi('add');
+            }
+        });
 
-		function markVideoApi(action) {
-			const req = new XMLHttpRequest();
-			req.open('POST', `https://api.bilibili.com/x/v2/history/toview/${action}`);
-			req.withCredentials = true;
-			req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-			req.onload = function (res) {
-				try {
-					var list = JSON.parse(res.target.response);
-					if (list.code != 0) {
-						console.error(`请求稍后再看错误 code ${list.code}</br>msg:${list.message}`, { list, target });
-						return;
-					}
-				} catch (e) {
-					console.error('请求稍后再看发生错误');
-				}
-			};
-			req.send(`aid=${id}&csrf=${getData.cookie('bili_jct')}`);
-		}
-	}
+        function markVideoApi(action) {
+            const req = new XMLHttpRequest();
+            req.open('POST', `https://api.bilibili.com/x/v2/history/toview/${action}`);
+            req.withCredentials = true;
+            req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            req.onload = function (res) {
+                try {
+                    var list = JSON.parse(res.target.response);
+                    if (list.code != 0) {
+                        console.error(`请求稍后再看错误 code ${list.code}</br>msg:${list.message}`, { list, target });
+                        return;
+                    }
+                } catch (e) {
+                    console.error('请求稍后再看发生错误');
+                }
+            };
+            req.send(`aid=${id}&csrf=${getData.cookie('bili_jct')}`);
+        }
+    }
 
-	function hideDom(element) {
-		let style = '';
-		element.forEach(function (e) {
-			style += `${e}{display:none !important;}`;
-		});
-		GM_addStyle(style);
-	}
+    function hideDom(element) {
+        let style = '';
+        element.forEach(function (e) {
+            style += `${e}{display:none !important;}`;
+        });
+        GM_addStyle(style);
+    }
 
-	const getData = {
-		accessKey() {
-			// 获取AccessKey
-			fetch(
-				'https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3' +
-					'&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a',
-				{
-					method: 'GET',
-					credentials: 'include',
-				}
-			)
-				.then(async res => {
-					try {
-						return await res.json();
-					} catch {
-						console.warn('请求接口错误');
-					}
-				})
-				.then(data => {
-					if (data.code || !data.data) {
-						throw { msg: data.msg || data.message || data.code, data };
-					} else if (!data.data.has_login) {
-						throw { msg: '你必须登录B站之后才能使用授权', data };
-					} else if (!data.data.confirm_uri) {
-						throw { msg: '无法获得授权网址', data };
-					} else {
-						return data.data.confirm_uri;
-					}
-				})
-				.then(url => {
-					GM_xmlhttpRequest({
-						method: 'GET',
-						url: url,
-						headers: { cookie: document.cookie },
-						onload: function (resp) {
-							accessKey = resp.finalUrl.match(/access_key=([0-9a-z]{32})/)[1];
-							console.log('获取accessKey成功', accessKey);
-							GM_setValue('accessKey', accessKey);
-						},
-						onerror: function (e) {
-							console.error('获取失败');
-						},
-					});
-				});
-		},
+    const getData = {
+        accessKey() {
+            // 获取AccessKey
+            fetch(
+                'https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3' +
+                    '&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a',
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            )
+                .then(async res => {
+                    try {
+                        return await res.json();
+                    } catch {
+                        console.warn('请求接口错误');
+                    }
+                })
+                .then(data => {
+                    if (data.code || !data.data) {
+                        throw { msg: data.msg || data.message || data.code, data };
+                    } else if (!data.data.has_login) {
+                        throw { msg: '你必须登录B站之后才能使用授权', data };
+                    } else if (!data.data.confirm_uri) {
+                        throw { msg: '无法获得授权网址', data };
+                    } else {
+                        return data.data.confirm_uri;
+                    }
+                })
+                .then(url => {
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: url,
+                        headers: { cookie: document.cookie },
+                        onload: function (resp) {
+                            accessKey = resp.finalUrl.match(/access_key=([0-9a-z]{32})/)[1];
+                            console.log('获取accessKey成功', accessKey);
+                            GM_setValue('accessKey', accessKey);
+                        },
+                        onerror: function (e) {
+                            console.error('获取失败');
+                        },
+                    });
+                });
+        },
 
-		cookie() {
-			const reg = `(^| )${key}=([^;]*)(;|$)`;
-			const arr = document.cookie.match(reg);
-			if (!arr) {
-				return null;
-			}
-			return arr[2];
-		},
-	};
-	const numConverter = {
-		// 数量
-		view(num) {
-			num = Number(num);
-			if (Math.abs(num) > 100000000) {
-				return (num / 100000000).toFixed(1) + '亿';
-			} else if (Math.abs(num) > 10000) {
-				return (num / 10000).toFixed(1) + '万';
-			} else {
-				return num.toFixed(0);
-			}
-		},
-		// 时长换算
-		duration(num) {
-			let second = num % 60;
-			let minute = Math.floor(num / 60);
-			let hour;
-			if (minute > 60) {
-				hour = Math.floor(minute / 60);
-				minute = minute % 60;
-			}
-			if (second < 10) second = '0' + second;
-			if (minute < 10) minute = '0' + minute;
-			return hour ? `${hour}:${minute}:${second}` : `${minute}:${second}`;
-		},
-		// 时间戳换算
-		timeStamp(timestamp) {
-			let date = new Date(parseInt(timestamp) * 1000);
-			let Year = date.getFullYear();
-			let Moth = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-			let Day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-			let Hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-			let Minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-			let Sechond = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-			let GMT = Year + '-' + Moth + '-' + Day + ' ' + Hour + ':' + Minute + ':' + Sechond;
-			let miniGMT = Moth + '-' + Day;
-			return {
-				full: GMT,
-				mini: miniGMT,
-			};
-		},
-	};
+        cookie() {
+            const reg = `(^| )${key}=([^;]*)(;|$)`;
+            const arr = document.cookie.match(reg);
+            if (!arr) {
+                return null;
+            }
+            return arr[2];
+        },
+    };
+    const numConverter = {
+        // 数量
+        view(num) {
+            num = Number(num);
+            if (Math.abs(num) > 100000000) {
+                return (num / 100000000).toFixed(1) + '亿';
+            } else if (Math.abs(num) > 10000) {
+                return (num / 10000).toFixed(1) + '万';
+            } else {
+                return num.toFixed(0);
+            }
+        },
+        // 时长换算
+        duration(num) {
+            let second = num % 60;
+            let minute = Math.floor(num / 60);
+            let hour;
+            if (minute > 60) {
+                hour = Math.floor(minute / 60);
+                minute = minute % 60;
+            }
+            if (second < 10) second = '0' + second;
+            if (minute < 10) minute = '0' + minute;
+            return hour ? `${hour}:${minute}:${second}` : `${minute}:${second}`;
+        },
+        // 时间戳换算
+        timeStamp(timestamp) {
+            let date = new Date(parseInt(timestamp) * 1000);
+            let Year = date.getFullYear();
+            let Moth = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+            let Day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+            let Hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+            let Minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+            let Sechond = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+            let GMT = Year + '-' + Moth + '-' + Day + ' ' + Hour + ':' + Minute + ':' + Sechond;
+            let miniGMT = Moth + '-' + Day;
+            return {
+                full: GMT,
+                mini: miniGMT,
+            };
+        },
+    };
 })();
