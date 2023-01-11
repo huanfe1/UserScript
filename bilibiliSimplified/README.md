@@ -20,5 +20,3 @@
 ## 专业页
 
 - 去除复制小尾巴
-
-![t.bilibili.com__tab=video.png](https://pic.rmb.bdstatic.com/bjh/dfd49038dedc93704b8567a8ccbc9dfe.png)
