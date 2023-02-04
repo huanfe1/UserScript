@@ -1,17 +1,14 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://ixory.com
-// @version      1.0.1
+// @version      1.0.2
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
 // @match        https://t.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
 // @grant        GM_addStyle
-// @grant        GM_xmlhttpRequest
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @license      WTFPL
+// @license      MIT License
 // @run-at       document-start
 // ==/UserScript==
 
@@ -45,21 +42,16 @@
             break;
     }
 
+    {
+        hideDom(['.bili-dyn-item__interaction', '.bili-dyn-item__ornament']);
+    }
+
     function homePage() {
-        hideDom(['.adblock-tips']);
+        hideDom(['.adblock-tips', '.bili-video-card:has(.bili-video-card__info--ad)']);
     }
 
     function dynamicPage() {
-        hideDom([
-            '.bili-dyn-item__interaction',
-            '.bili-dyn-item__ornament',
-            '.bili-avatar-pendent-dom',
-            'aside.right .sticky',
-            '.sailing',
-            '.medal',
-            '.nameplate',
-            '.notice-item',
-        ]);
+        hideDom(['.bili-avatar-pendent-dom', 'aside.right .sticky', '.sailing', '.medal', '.nameplate', '.notice-item']);
     }
 
     function videoPlayPage() {
@@ -72,7 +64,9 @@
             '.bpx-player-cmd-dm-wrap',
             '.reply-notice',
             '.ad-report',
-            '.fan-badge'
+            '.fan-badge',
+            '.reply-tag-list',
+            '.video-page-special-card-small',
         ]);
 
         // 删去投票弹窗弹幕
