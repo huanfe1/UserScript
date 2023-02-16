@@ -67,6 +67,7 @@
             '.fan-badge',
             '.reply-tag-list',
             '.video-page-special-card-small',
+            'originalFan',
         ]);
 
         // 删去投票弹窗弹幕

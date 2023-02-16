@@ -7,7 +7,7 @@
 // @match        *://*.zhihu.com/*
 // @icon         https://static.zhihu.com/heifetz/favicon.ico
 // @grant        GM_addStyle
-// @license      MIT
+// @license      MIT License
 // @run-at       document-start
 // ==/UserScript==
 
@@ -70,7 +70,6 @@
         style += '.css-yhjwoe{justify-content:space-between;}';
         style += '.css-yhjwoe > div{margin: 0}';
         document.onreadystatechange = function () {
-            console.log("执行")
             if (document.querySelector('.Topstory>div:not([class])')) {
                 document.querySelector('.Topstory>div:not([class]) svg').dispatchEvent(new MouseEvent('click', { bubbles: true }));
             }
