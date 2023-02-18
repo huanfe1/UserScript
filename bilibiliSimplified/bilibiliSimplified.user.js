@@ -43,7 +43,7 @@
     }
 
     {
-        hideDom(['.bili-dyn-item__interaction', '.bili-dyn-item__ornament']);
+        hideDom(['.bili-dyn-item__interaction', '.bili-dyn-item__ornament', '.bili-dyn-list__item:has(.bili-rich-text-module.lottery)']);
     }
 
     function homePage() {
