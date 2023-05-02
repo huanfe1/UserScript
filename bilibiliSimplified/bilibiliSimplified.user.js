@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
-// @namespace    https://ixory.com
-// @version      1.0.2
+// @namespace    https://github.com/huanfeiiiii
+// @version      1.0.4
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -24,10 +24,13 @@
                 case 'video':
                     console.log('视频播放页');
                     videoPlayPage();
+                    break;
                 case 'read':
                     console.log('专栏页');
                     readPage();
+                    break;
             }
+            break;
         case 't':
             console.log('动态');
             dynamicPage();
@@ -89,6 +92,23 @@
                 }
             });
         });
+
+        // 观看时间超过进度条的 95% 自动点赞
+        domReady('video', () => {
+            const video = document.querySelector('video');
+            const like = document.querySelector('.toolbar-left .like:not(.on)');
+            let num = 0;
+            let timer = setInterval(() => {
+                // 跳过时长少于30秒的视频
+                if (video.duration <= 30 || document.querySelector('.toolbar-left .like.on')) clearInterval(timer);
+                if (!video.paused) num++;
+                if (num / video.duration >= 0.95) {
+                    console.log('观看时长已到达视频时长的95%，执行点赞操作');
+                    like.click();
+                    clearInterval(timer);
+                }
+            }, 1000);
+        });
     }
 
     function readPage() {
@@ -116,5 +136,19 @@
             style += `${e}{display:none !important;}`;
         });
         GM_addStyle(style);
+    }
+
+    /**
+     * 监听某元素加载后执行函数
+     * @param {string} select 元素选择器
+     * @param {*} func 执行函数
+     */
+    function domReady(select, func) {
+        let timer = setInterval(() => {
+            if (document.querySelector(select)) {
+                func();
+                clearInterval(timer);
+            }
+        });
     }
 })();
