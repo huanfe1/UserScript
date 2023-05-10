@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://github.com/huanfeiiiii
-// @version      1.0.4
+// @version      1.0.5
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -13,6 +13,7 @@
 // ==/UserScript==
 
 (function () {
+    const autoLike = false;
     const url = window.location.href;
     switch (url.split('.')[0].split('/')[2]) {
         case 'www':
@@ -94,21 +95,24 @@
         });
 
         // 观看时间超过进度条的 95% 自动点赞
-        domReady('video', () => {
-            const video = document.querySelector('video');
-            const like = document.querySelector('.toolbar-left .like:not(.on)');
-            let num = 0;
-            let timer = setInterval(() => {
-                // 跳过时长少于30秒的视频
-                if (video.duration <= 30 || document.querySelector('.toolbar-left .like.on')) clearInterval(timer);
-                if (!video.paused) num++;
-                if (num / video.duration >= 0.95) {
-                    console.log('观看时长已到达视频时长的95%，执行点赞操作');
-                    like.click();
-                    clearInterval(timer);
-                }
-            }, 1000);
-        });
+        if (autoLike) {
+            console.log('开启自动点赞');
+            domReady('video', () => {
+                const video = document.querySelector('video');
+                const like = document.querySelector('.toolbar-left .like:not(.on)');
+                let num = 0;
+                let timer = setInterval(() => {
+                    // 跳过时长少于30秒的视频
+                    if (video.duration <= 30 || document.querySelector('.toolbar-left .like.on')) clearInterval(timer);
+                    if (!video.paused) num++;
+                    if (num / video.duration >= 0.95) {
+                        console.log('观看时长已到达视频时长的95%，执行点赞操作');
+                        like.click();
+                        clearInterval(timer);
+                    }
+                }, 1000);
+            });
+        }
     }
 
     function readPage() {
