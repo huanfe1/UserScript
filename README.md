@@ -2,6 +2,8 @@
 
 个人脚本
 
-[zhihuSimplified](https://github.com/huanfeiiiii/UserScript/raw/main/zhihuSimplified/zhihuSimplified.user.js)
+简化个人常用网站，现支持一下网站
 
-[bilibiliSimplified](https://github.com/huanfeiiiii/UserScript/raw/main/bilibiliSimplified/bilibiliSimplified.user.js)
+-   Bilibili
+-   知乎
+-   CSDN
