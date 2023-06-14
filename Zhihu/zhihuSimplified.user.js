@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         知乎宽屏
-// @namespace    https://ixory.com
+// @namespace    https://huanfei.top/
 // @version      1.1.0
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
@@ -19,6 +19,9 @@
         '.Topstory>div:not([class]){display:none}',
         '.Topstory-container > div:nth-child(2){display:none}',
         '.css-yhjwoe{justify-content:space-between;}',
+        '.RichContent.is-collapsed .RichText-ADLinkCardContainer{display:none;}',
+        '.Card.TopstoryItem:has(.ZVideoItem){display:none;}',
+        '.Card.TopstoryItem:has(.VideoAnswerPlayer){display:none;}',
         // 搜索页面
         '#SearchMain{width:inherit}',
         '#SearchMain ~ div{display:none}',

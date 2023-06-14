@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         B站简化
-// @namespace    https://github.com/huanfeiiiii
+// @namespace    https://huanfei.top/
 // @version      1.0.5
 // @description  简化B站
 // @author       huanfei
@@ -55,7 +55,7 @@
     }
 
     function dynamicPage() {
-        hideDom(['.bili-avatar-pendent-dom', 'aside.right .sticky', '.sailing', '.medal', '.nameplate', '.notice-item']);
+        hideDom(['.bili-avatar-pendent-dom', 'aside.right .sticky', '.sailing', '.medal', '.nameplate', '.notice-item', '.reply-notice']);
     }
 
     function videoPlayPage() {
