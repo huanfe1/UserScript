@@ -4,6 +4,6 @@
 
 简化个人常用网站，现支持一下网站
 
--   Bilibili
--   知乎
--   CSDN
+-   [Bilibili](https://greasyfork.org/zh-CN/scripts/444746)
+-   [知乎](https://greasyfork.org/zh-CN/scripts/443919)
+-   [CSDN](https://greasyfork.org/zh-CN/scripts/468655)
