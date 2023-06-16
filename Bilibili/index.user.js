@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.0.6
+// @version      1.0.7
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -108,5 +108,7 @@
         hideDom(['.video-list > div:has(.bili-video-card__info--ad)']);
     }
 
-    const hideDom = element => GM_addStyle(element.map(e => `${e}{display:none !important;}`).join(''));
+    function hideDom(element) {
+        GM_addStyle(element.map(e => `${e}{display:none !important;}`).join(''));
+    }
 })();
