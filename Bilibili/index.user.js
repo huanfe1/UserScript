@@ -72,6 +72,7 @@
             '.reply-tag-list',
             '.video-page-special-card-small',
             'originalFan',
+            '.reply-item:has(.image-exhibition)',
         ]);
 
         // 删去投票弹窗弹幕
