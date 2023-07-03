@@ -14,37 +14,37 @@
 (function () {
     const style = [
         // 首页
-        '.origin_image{max-width:50% !important}',
-        '.Topstory-mainColumn{width:inherit}',
-        '.Topstory>div:not([class]){display:none}',
-        '.Topstory-container > div:nth-child(2){display:none}',
+        '.origin_image{max-width:50% !important;}',
+        '.Topstory-mainColumn{width:inherit;}',
+        '.Topstory>div:not([class]){display:none;}',
+        '.Topstory-container > div:nth-child(2){display:none;}',
         '.css-yhjwoe{justify-content:space-between;}',
         '.RichContent.is-collapsed .RichText-ADLinkCardContainer{display:none;}',
         '.Card.TopstoryItem:has(.ZVideoItem){display:none;}',
         '.Card.TopstoryItem:has(.VideoAnswerPlayer){display:none;}',
         // 搜索页面
-        '#SearchMain{width:inherit}',
-        '#SearchMain ~ div{display:none}',
+        '#SearchMain{width:inherit;}',
+        '#SearchMain ~ div{display:none;}',
         // 问题页面
         '.Question-sideColumn{display:none;}',
         '.Question-mainColumn, .ListShortcut{width:inherit;}',
         '.AuthorInfo.AnswerItem-authorInfo.AnswerItem-authorInfo--related .FollowButton{display:none;}',
         //  收藏夹页面
         '.CollectionsDetailPage-mainColumn{width:inherit;}',
-        '.CollectionsDetailPage > div:nth-child(2){min-width:20%}',
+        '.CollectionsDetailPage > div:nth-child(2){min-width:20%;}',
         // 用户页面
         '.Profile-mainColumn{width:inherit;}',
         '.Profile-sideColumn{display:none;}',
         '.AuthorInfo-Widget{display:none;}',
         // 话题页面
-        '.App-main div[data-za-detail-view-path-module="TopicItem"] > div:nth-child(1){width:inherit}',
-        '.App-main div[data-za-detail-view-path-module="TopicItem"] > div:nth-child(2){display:none}',
+        '.App-main div[data-za-detail-view-path-module="TopicItem"] > div:nth-child(1){width:inherit;}',
+        '.App-main div[data-za-detail-view-path-module="TopicItem"] > div:nth-child(2){display:none;}',
         // 通知页面
         '.Notifications-Layout > div:nth-child(1){width:inherit;}',
         '.Notifications-Layout > div:nth-child(2){display:none;}',
         // 折叠按钮
         '.CornerAnimayedFlex{height:130px}',
-        '.CornerAnimayedFlex > button:nth-child(2){margin-top:10px;transform:rotate(90deg)}',
+        '.CornerAnimayedFlex > button:nth-child(2){margin-top:10px;transform:rotate(90deg);}',
     ];
     GM_addStyle(style.join(''));
 
