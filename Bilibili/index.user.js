@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.0
+// @version      1.1.1
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -37,6 +37,9 @@
         'div#activity_vote',
         'span.argue.item', // 安全提醒
         '.pop-live-small-mode', // 大家围观的直播
+        '.bili-vote', // 弹幕投票框
+        '.bili-score', // 弹幕评分框
+        '.bili-guide', // 引导三连 + 关注框
         // 动态页
         '.bili-dyn-item__interaction', // 热门评论
         '.bili-dyn-item__ornament', // 右上角标志
