@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.2
+// @version      1.1.3
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -64,7 +64,7 @@
     // 视频页停留25秒自动点赞视频
     if (autoLike && /\/video\//.test(location.pathname)) {
         setTimeout(() => {
-            document.querySelector('.video-like.video-toolbar-left-item').click();
+            document.querySelector('.video-like.video-toolbar-left-item:not(.on)').click();
             console.log('已点赞视频');
         }, 25000);
     }
