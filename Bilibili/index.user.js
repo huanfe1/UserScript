@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.1
+// @version      1.1.2
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
