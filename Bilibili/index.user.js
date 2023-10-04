@@ -13,6 +13,7 @@
 // ==/UserScript==
 
 (function () {
+    const autoLike = false;
     const style = [
         // 公共
         '.bili-avatar-pendent-dom', // 头像挂件
@@ -60,4 +61,11 @@
     );
     // 去除复制小尾巴
     window.addEventListener('copy', e => e.stopPropagation(), true);
+    // 视频页停留25秒自动点赞视频
+    if (autoLike && /\/video\//.test(location.pathname)) {
+        setTimeout(() => {
+            document.querySelector('.video-like.video-toolbar-left-item').click();
+            console.log('已点赞视频');
+        }, 25000);
+    }
 })();
