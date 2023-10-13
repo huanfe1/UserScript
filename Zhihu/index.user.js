@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.0
+// @version      1.1.1
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -57,8 +57,8 @@
     // 点击事件监听
     document.addEventListener('click', e => {
         // 快捷关闭评论弹窗
-        if (e.target.className == 'css-18hmmtu') {
-            document.querySelector('.css-19q29v6 .Button.css-1x9te0t').click();
+        if (e.target == document.querySelector('span[data-focus-scope-start="true"] ~ div > div:nth-child(1)')) {
+            document.querySelector('span[data-focus-scope-start="true"] ~ div > div:nth-child(2) > button').click();
         }
         // 去除外链限制
         document.querySelectorAll("a.external:not([class~='modify'])").forEach(e => {
