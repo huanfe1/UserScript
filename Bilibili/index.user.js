@@ -44,6 +44,7 @@
         '.bili-dyn-item__interaction', // 热门评论
         '.bili-dyn-item__ornament', // 右上角标志
         '.bili-dyn-list__item:has(.bili-rich-text-module.lottery)', // 抽奖动态
+        '.bili-dyn-list__item:has(.bili-dyn-card-goods)', //抽奖带货
         'aside.right .sticky', // 右侧推荐
         '.bili-dyn-content__dispute', // 安全提醒
         '.b-avatar__canvas > div.b-avatar__layers:not(:nth-child(1))', // 头像挂件
@@ -57,6 +58,8 @@
             '.feed-card{margin-top: 40px !important;}',
             '.container.is-version8 > .bili-video-card.is-rcmd{margin-top: 40px !important;}',
             '.b-avatar__layer.center{width: 48px !important;height: 48px !important;}',
+            //动态左侧直播不随屏幕滚动
+            '.bili-dyn-live-users{position: inherit !important;top: 0px !important;}',
         ].join('')
     );
     // 去除复制小尾巴
