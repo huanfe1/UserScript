@@ -1,19 +1,27 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.3
+// @version      1.1.4
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
 // @match        https://t.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
 // @grant        GM_addStyle
+// @grant        GM_registerMenuCommand
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @license      MIT License
 // @run-at       document-start
 // ==/UserScript==
 
 (function () {
     const autoLike = false;
+    if (GM_getValue('auto_like') === undefined) GM_setValue('auto_like', false);
+    GM_registerMenuCommand(GM_getValue('auto_like') ? '✅已开启自动点赞' : '❌已关闭自动点赞', () => {
+        GM_setValue('auto_like', !GM_getValue('auto_like'));
+        location.reload();
+    });
     const style = [
         // 公共
         '.bili-avatar-pendent-dom', // 头像挂件
@@ -65,7 +73,7 @@
     // 去除复制小尾巴
     window.addEventListener('copy', e => e.stopPropagation(), true);
     // 视频页停留25秒自动点赞视频
-    if (autoLike && /\/video\//.test(location.pathname)) {
+    if (GM_getValue('auto_like') && /\/video\//.test(location.pathname)) {
         setInterval(() => {
             document.querySelector('.video-like.video-toolbar-left-item:not(.on)').click();
             console.log('已点赞视频');
