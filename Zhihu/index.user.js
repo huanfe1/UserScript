@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.1
+// @version      1.1.2
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -22,6 +22,7 @@
         '.RichContent.is-collapsed .RichText-ADLinkCardContainer{display:none;}',
         '.Card.TopstoryItem:has(.ZVideoItem){display:none;}',
         '.Card.TopstoryItem:has(.VideoAnswerPlayer){display:none;}',
+        '.Card.TopstoryItem.TopstoryItem-isRecommend:has(.ContentItem.PinItem){display:none;}', // 屏蔽Pin
         // 搜索页面
         '#SearchMain{width:inherit;}',
         '#SearchMain ~ div{display:none;}',
@@ -36,6 +37,9 @@
         '.Profile-mainColumn{width:inherit;}',
         '.Profile-sideColumn{display:none;}',
         '.AuthorInfo-Widget{display:none;}',
+        // 等你来答
+        '.QuestionWaiting > div:nth-child(1){width:inherit;}',
+        '.QuestionWaiting > div:nth-child(2){display:none;}',
         // 话题页面
         '.App-main div[data-za-detail-view-path-module="TopicItem"] > div:nth-child(1){width:inherit;}',
         '.App-main div[data-za-detail-view-path-module="TopicItem"] > div:nth-child(2){display:none;}',
