@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.2
+// @version      1.1.3
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -14,7 +14,7 @@
 (function () {
     const style = [
         // 首页
-        '.origin_image{max-width:50% !important;}',
+        '.origin_image{max-width:50%;}',
         '.Topstory-mainColumn{width:inherit;}',
         '.Topstory>div:not([class]){display:none;}',
         '.Topstory-container > div:nth-child(2){display:none;}',
@@ -30,6 +30,7 @@
         '.Question-sideColumn{display:none;}',
         '.Question-mainColumn, .ListShortcut{width:inherit;}',
         '.AuthorInfo.AnswerItem-authorInfo.AnswerItem-authorInfo--related .FollowButton{display:none;}',
+        '.RichContent--unescapable.is-collapsed .RichContent-inner{min-height: 125px;}', // 回答文字较短时出现的样式错误
         //  收藏夹页面
         '.CollectionsDetailPage-mainColumn{width:inherit;}',
         '.CollectionsDetailPage > div:nth-child(2){min-width:20%;}',
@@ -47,10 +48,10 @@
         '.Notifications-Layout > div:nth-child(1){width:inherit;}',
         '.Notifications-Layout > div:nth-child(2){display:none;}',
         // 折叠按钮
-        '.CornerAnimayedFlex{height:130px}',
+        '.CornerAnimayedFlex{height:130px;}',
         '.CornerAnimayedFlex > button:nth-child(2){margin-top:10px;transform:rotate(90deg);}',
     ];
-    GM_addStyle(style.join(''));
+    GM_addStyle(style.join('').replaceAll(';', '!important;'));
 
     // 关闭首页广告
     document.onreadystatechange = () => {
