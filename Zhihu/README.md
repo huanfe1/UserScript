@@ -1,9 +1,9 @@
 实现知乎大部分页面主体部分变宽，隐藏侧边栏
 
-![image.png](https://pic1.58cdn.com.cn/nowater/webim/big/n_v2a8139cd5b6d74079b7a921d17aef3716.png)
+![image.png](https://img10.chkaja.com/files/20231209/b4abdfb241b091b2.png)
 
-![image.png](https://pic3.58cdn.com.cn/nowater/webim/big/n_v296ecb65b12844870b5d92548b89608b2.png)
+![IMG](https://img.chkaja.com/b8e4a89b04f35b29.jpg)
 
-![image.png](https://pic2.58cdn.com.cn/nowater/webim/big/n_v2c69dec9d690c4329bb3b683666c7ce16.png)
+![IMG](https://img.chkaja.com/91b94cc2a4b89709.png)
 
-![image.png](https://pic7.58cdn.com.cn/nowater/webim/big/n_v2c4a2a50612c4435589acb73dad57a22d.png)
+![IMG](https://img.chkaja.com/535c25976e85b76f.png)
