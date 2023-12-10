@@ -19,9 +19,11 @@
     'use strict';
     // 自定义样式去除
     const style = [
-        // 公共
         '.bili-avatar-pendent-dom', // 头像挂件
+        '.user .medal', // 荣誉
         '.fan-badge', // 粉丝勋章
+        '.sailing',
+        '.bb-comment .nameplate, .comment-bilibili-fold .nameplate, .nameplate-holder', // 成就徽章
         '.reply-tag-list', // 热评标签
         '.reply-notice', // 评论通知
         // 首页
