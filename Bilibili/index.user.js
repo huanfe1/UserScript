@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.4
+// @version      1.1.5
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -16,12 +16,8 @@
 // ==/UserScript==
 
 (function () {
-    const autoLike = false;
-    if (GM_getValue('auto_like') === undefined) GM_setValue('auto_like', false);
-    GM_registerMenuCommand(GM_getValue('auto_like') ? '✅已开启自动点赞' : '❌已关闭自动点赞', () => {
-        GM_setValue('auto_like', !GM_getValue('auto_like'));
-        location.reload();
-    });
+    'use strict';
+    // 自定义样式去除
     const style = [
         // 公共
         '.bili-avatar-pendent-dom', // 头像挂件
@@ -59,8 +55,11 @@
         '.b-avatar__layers > div:not(:nth-child(1))', // 头像挂件
         // 查找页
         '.video-list > div:has(.bili-video-card__info--ad)',
+        GM_getValue('history_show', false) ? '' : '.search-panel .history',
     ];
     GM_addStyle(style.map(e => `${e}{display:none !important;}`).join(''));
+
+    // 自定义样式
     GM_addStyle(
         [
             '.feed-card{margin-top: 40px !important;}',
@@ -70,13 +69,25 @@
             '.bili-dyn-live-users{position: inherit !important;top: 0px !important;}',
         ].join('')
     );
+
     // 去除复制小尾巴
     window.addEventListener('copy', e => e.stopPropagation(), true);
+
     // 视频页停留25秒自动点赞视频
-    if (GM_getValue('auto_like') && /\/video\//.test(location.pathname)) {
+    if (GM_getValue('auto_like', false) && /\/video\//.test(location.pathname)) {
         setInterval(() => {
             document.querySelector('.video-like.video-toolbar-left-item:not(.on)').click();
             console.log('已点赞视频');
         }, 25000);
     }
+
+    // 自定义菜单
+    GM_registerMenuCommand((GM_getValue('auto_like', false) ? '✅' : '❌') + '自动点赞', () => {
+        GM_setValue('auto_like', !GM_getValue('auto_like', false));
+        location.reload();
+    });
+    GM_registerMenuCommand((GM_getValue('history_show', false) ? '✅' : '❌') + '搜索历史显示', () => {
+        GM_setValue('history_show', !GM_getValue('history_show', false));
+        location.reload();
+    });
 })();
