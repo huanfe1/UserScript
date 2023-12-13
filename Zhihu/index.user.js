@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.4
+// @version      1.1.5
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -23,7 +23,7 @@
         '.Card.TopstoryItem:has(.ZVideoItem){display:none;}',
         '.Card.TopstoryItem:has(.VideoAnswerPlayer){display:none;}',
         '.Card.TopstoryItem.TopstoryItem-isRecommend:has(.ContentItem.PinItem){display:none;}', // 屏蔽Pin
-        '.Card.TopstoryItem.TopstoryItem-isRecommend:has(.Pc-feedAd-container)', // 广告
+        '.Card.TopstoryItem.TopstoryItem-isRecommend:has(.Pc-feedAd-container){display:none;}', // 广告
         // 搜索页面
         '#SearchMain{width:inherit;}',
         '#SearchMain ~ div{display:none;}',
