@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.5
+// @version      1.1.6
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -57,7 +57,7 @@
         '.b-avatar__layers > div:not(:nth-child(1))', // 头像挂件
         // 查找页
         '.video-list > div:has(.bili-video-card__info--ad)',
-        GM_getValue('history_show', false) ? '' : '.search-panel .history',
+        GM_getValue('history_show', true) ? '' : '.search-panel .history',
     ];
     GM_addStyle(style.map(e => `${e}{display:none !important;}`).join(''));
 
@@ -88,8 +88,8 @@
         GM_setValue('auto_like', !GM_getValue('auto_like', false));
         location.reload();
     });
-    GM_registerMenuCommand((GM_getValue('history_show', false) ? '✅' : '❌') + '搜索历史显示', () => {
-        GM_setValue('history_show', !GM_getValue('history_show', false));
+    GM_registerMenuCommand((GM_getValue('history_show', true) ? '✅' : '❌') + '搜索历史显示', () => {
+        GM_setValue('history_show', !GM_getValue('history_show', true));
         location.reload();
     });
 })();
