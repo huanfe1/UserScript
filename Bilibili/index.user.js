@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.6
+// @version      1.1.7
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -26,6 +26,7 @@
         '.bb-comment .nameplate, .comment-bilibili-fold .nameplate, .nameplate-holder', // 成就徽章
         '.reply-tag-list', // 热评标签
         '.reply-notice', // 评论通知
+        'li.v-popover-wrap.left-loc-entry', // 顶部栏杂项
         // 首页
         '.recommended-swipe.grid-anchor',
         '.feed-card:has(.bili-video-card__info--ad)',
