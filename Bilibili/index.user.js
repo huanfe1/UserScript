@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.8
+// @version      1.1.9
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -72,7 +72,7 @@
             //动态左侧直播不随屏幕滚动
             '.bili-dyn-live-users{position: inherit !important;top: 0px !important;}',
             // 头像样式修复
-            '.bili-avatar{width:48px !important;height:48px !important;transform:translate(0px, 0px) !important;}',
+            '.up-info-container .bili-avatar{width:48px !important;height:48px !important;transform:translate(0px, 0px) !important;}',
         ].join('')
     );
 
