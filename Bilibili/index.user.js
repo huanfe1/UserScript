@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.7
+// @version      1.1.8
 // @description  简化B站
 // @author       huanfei
 // @match        *.bilibili.com/*
@@ -26,7 +26,7 @@
         '.bb-comment .nameplate, .comment-bilibili-fold .nameplate, .nameplate-holder', // 成就徽章
         '.reply-tag-list', // 热评标签
         '.reply-notice', // 评论通知
-        'li.v-popover-wrap.left-loc-entry', // 顶部栏杂项
+        '.left-loc-entry', // 顶部栏杂项
         // 首页
         '.recommended-swipe.grid-anchor',
         '.feed-card:has(.bili-video-card__info--ad)',
@@ -47,6 +47,7 @@
         '.pop-live-small-mode', // 大家围观的直播
         '.bpx-player-cmd-dm-wrap', // 弹幕弹窗
         '.bili-cmd-shrink', // 弹幕弹窗
+        '.toolbar-right-ai', // AI 总结
         // 动态页
         '.bili-dyn-item__interaction', // 热门评论
         '.bili-dyn-item__ornament', // 右上角标志
@@ -70,6 +71,8 @@
             '.b-avatar__layer.center{width: 48px !important;height: 48px !important;}',
             //动态左侧直播不随屏幕滚动
             '.bili-dyn-live-users{position: inherit !important;top: 0px !important;}',
+            // 头像样式修复
+            '.bili-avatar{width:48px !important;height:48px !important;transform:translate(0px, 0px) !important;}',
         ].join('')
     );
 
