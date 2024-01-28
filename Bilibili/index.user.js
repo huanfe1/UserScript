@@ -2,10 +2,9 @@
 // @name         B站简化
 // @namespace    https://huanfei.top/
 // @version      1.1.10
-// @description  简化B站
+// @description  简化B站，去除页面无用元素
 // @author       huanfei
-// @match        *.bilibili.com/*
-// @match        https://t.bilibili.com/*
+// @match         *://*.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
