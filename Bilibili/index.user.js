@@ -60,7 +60,7 @@
         '.b-avatar__layers > div:not(:nth-child(1))', // 头像挂件
         // 查找页
         '.video-list > div:has(.bili-video-card__info--ad)',
-        GM_getValue('history_show', true) ? '' : '.search-panel .history, #search-history',
+        GM_getValue('history_show', true) ? '' : '.search-panel .history',
     ];
     GM_addStyle(style.map(e => `${e}{display:none !important;}`).join(''));
 
