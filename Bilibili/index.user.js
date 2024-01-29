@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.11
+// @version      1.1.12
 // @description  简化B站，去除页面无用元素
 // @author       huanfei
 // @match         *://*.bilibili.com/*
@@ -70,13 +70,14 @@
     // 自定义样式
     GM_addStyle(
         [
-            '.feed-card{margin-top: 40px !important;}',
-            '.container.is-version8 > .bili-video-card.is-rcmd{margin-top: 40px !important;}',
-            '.b-avatar__layer.center{width: 48px !important;height: 48px !important;}',
+            '.feed-card{margin-top:40px !important}',
+            '.container.is-version8>.bili-video-card.is-rcmd{margin-top:40px !important}',
+            '.b-avatar__layer.center{width:48px !important;height:48px !important}',
             //动态左侧直播不随屏幕滚动
-            '.bili-dyn-live-users{position: inherit !important;top: 0px !important;}',
+            '.bili-dyn-live-users{position:inherit !important;top:0px !important}',
             // 头像样式修复
-            '.up-info-container .bili-avatar{width:48px !important;height:48px !important;transform:translate(0px, 0px) !important;}',
+            '.up-info-container .bili-avatar{width:48px !important;height:48px !important;transform:translate(0px 0px) !important}',
+            '.load-more-anchor{position:absolute;bottom:100vh;right:0;visibility:hidden;hight:20vh;}',
         ].join('')
     );
 
