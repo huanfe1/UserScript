@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.10
+// @version      1.1.11
 // @description  简化B站，去除页面无用元素
 // @author       huanfei
 // @match         *://*.bilibili.com/*
@@ -26,6 +26,8 @@
         '.reply-tag-list', // 热评标签
         '.reply-notice', // 评论通知
         '.left-loc-entry', // 顶部栏杂项
+        'ul.right-entry > .vip-wrap, .item:has(#van-popover-6213)', // 顶部栏大会员按钮
+        '.vip-entry-containter', // 充值大会员
         // 首页
         '.recommended-swipe.grid-anchor',
         '.feed-card:has(.bili-video-card__info--ad)',
@@ -48,6 +50,7 @@
         '.bili-cmd-shrink', // 弹幕弹窗
         '.toolbar-right-ai', // AI 总结
         '.reply-item:has(i.top-icon ~ a.jump-link.normal)', // 置顶的广告评论
+        'span.copyright.item', // 版权栏
         // 动态页
         '.bili-dyn-item__interaction', // 热门评论
         '.bili-dyn-item__ornament', // 右上角标志
@@ -57,8 +60,9 @@
         '.bili-dyn-content__dispute', // 安全提醒
         '.b-avatar__canvas > div.b-avatar__layers:not(:nth-child(1))', // 头像挂件
         '.b-avatar__layers > div:not(:nth-child(1))', // 头像挂件
-        // 查找页
+        // 搜索页
         '.video-list > div:has(.bili-video-card__info--ad)',
+        '#biliMainFooter',
         GM_getValue('history_show', true) ? '' : '.search-panel .history',
     ];
     GM_addStyle(style.map(e => `${e}{display:none !important;}`).join(''));
