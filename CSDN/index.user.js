@@ -20,7 +20,7 @@
         '#recommendNps{display:none !important}',
         '.option-box[data-type="guide"]{display:none !important}',
         '.option-box[data-type="cs"]{display:none !important}',
-        '.hide-article-box.hide-article-pos{display:none !important}}'
+        '.hide-article-box.hide-article-pos{display:none !important}',
     ];
     GM_addStyle(style.join(''));
     document.onreadystatechange = () => {
