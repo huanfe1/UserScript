@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.1.12
+// @version      1.2.0
 // @description  简化B站，去除页面无用元素
 // @author       huanfei
 // @match         *://*.bilibili.com/*
@@ -28,6 +28,12 @@
         '.left-loc-entry', // 顶部栏杂项
         'ul.right-entry > .vip-wrap, .item:has(#van-popover-6213)', // 顶部栏大会员按钮
         '.vip-entry-containter', // 充值大会员
+        '.feed-card{margin-top:40px !important;display:block !important}',
+        '.container.is-version8>.bili-video-card.is-rcmd{margin-top:40px !important}',
+        '.b-avatar__layer.center{width:48px !important;height:48px !important}',
+        '.bili-dyn-live-users{position:inherit !important;top:0px !important}', //动态左侧直播不随屏幕滚动
+        '.up-info-container .bili-avatar{width:48px !important;height:48px !important;transform:translate(0px 0px) !important}', // 头像样式修复
+        '.load-more-anchor{position:absolute;bottom:100vh;right:0;visibility:hidden;hight:20vh;}',
         // 首页
         '.recommended-swipe.grid-anchor',
         '.feed-card:has(.bili-video-card__info--ad)',
@@ -51,6 +57,7 @@
         '.toolbar-right-ai', // AI 总结
         '.reply-item:has(i.top-icon ~ a.jump-link.normal)', // 置顶的广告评论
         'span.copyright.item', // 版权栏
+        '.video-sections-content-list{max-height:400px !important;height:auto !important;}', // 播放列表加长
         // 动态页
         '.bili-dyn-item__interaction', // 热门评论
         '.bili-dyn-item__ornament', // 右上角标志
@@ -63,23 +70,37 @@
         // 搜索页
         '.video-list > div:has(.bili-video-card__info--ad)',
         '#biliMainFooter',
-        GM_getValue('history_show', true) ? '' : '.search-panel .history',
+        GM_getValue('history_show', true) ? '' : '.search-panel .history, .search-pannel .history', // 搜索历史
+        // 直播
+        // 直播-右侧弹幕栏
+        'div#chat-items > div:not(.chat-item.danmaku-item)', // 弹幕位置的所有非用户弹幕元素
+        '.danmaku-item-left > *:not(.common-nickname-wrapper)', // 弹幕用户名称左侧的杂类元素
+        '#chat-items .danmaku-item-right.emoticon.bulge span.open-menu{display:block !important}', // 图片表情
+        '#chat-items .danmaku-item-right.emoticon.bulge img.open-menu', // 图片表情
+        '#aside-area-vm > *:not(.chat-history-panel, #chat-control-panel-vm)', // 非弹幕元素
+        '#aside-area-vm > .chat-history-panel > *:not(.chat-history-list, .danmaku-menu)', // 非弹幕元素
+        '#aside-area-vm .chat-history-list{height: 100% !important;padding:5px !important;}', // 非弹幕元素
+        '#control-panel-ctnr-box > *:not(.control-panel-icon-row, .chat-input-ctnr, .bottom-actions, .dialog-ctnr)', // 非弹幕元素
+        '#chat-items .chat-item.danmaku-item{background-color: transparent !important;border-image-source: none !important;}', // 弹幕颜色统一
+        '.chat-item.danmaku-item > div:not(.danmaku-item-left, .danmaku-item-right)',
+        '.chat-history-panel .chat-history-list .chat-item.superChat-card-detail', // SC
+        '#control-panel-ctnr-box .icon-right-part > div:is(.super-chat, .like-btn)', // SC 跟点赞按钮
+        '.chat-input-ctnr .medal-section', // 佩戴粉丝勋章
+        // 直播-其他栏
+        '.blive-avatar-pendant', // 头像边框
+        '#sections-vm, #link-footer-vm', // 底栏
+        '.blive-avatar-icons', // 头像右下角认证
+        '#head-info-vm .lower-row .right-ctnr{visibility: hidden !important;}', // 人气排行榜
+        'span.user-name{color:var(--text3) !important;}', // 用户名颜色统一
+        '.chat-history-panel{height:calc(100% - 145px) !important;background-color: var(--bg1) !important;}', // 弹幕背景颜色统一
+        'div#aside-area-vm{overflow: hidden !important;}', // 圆角统一
+        '.announcement-wrapper', // 窗口弹幕横幅
+        '#gift-control-vm > .gift-control-panel',
+        '#gift-control-vm{height:45px !important;}',
+        '#chat-items > .chat-item.danmaku-item{margin: 0px !important;}',
     ];
-    GM_addStyle(style.map(e => `${e}{display:none !important;}`).join(''));
 
-    // 自定义样式
-    GM_addStyle(
-        [
-            '.feed-card{margin-top:40px !important}',
-            '.container.is-version8>.bili-video-card.is-rcmd{margin-top:40px !important}',
-            '.b-avatar__layer.center{width:48px !important;height:48px !important}',
-            //动态左侧直播不随屏幕滚动
-            '.bili-dyn-live-users{position:inherit !important;top:0px !important}',
-            // 头像样式修复
-            '.up-info-container .bili-avatar{width:48px !important;height:48px !important;transform:translate(0px 0px) !important}',
-            '.load-more-anchor{position:absolute;bottom:100vh;right:0;visibility:hidden;hight:20vh;}',
-        ].join('')
-    );
+    GM_addStyle(style.map(e => (/.*{.*}$/.test(e) ? e : `${e}{display:none !important;}`)).join(''));
 
     // 去除复制小尾巴
     window.addEventListener('copy', e => e.stopPropagation(), true);
