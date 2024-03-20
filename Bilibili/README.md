@@ -9,7 +9,7 @@
 
 -   更改头部样式，直接显示推荐视频
 
-![home](https://s11.ax1x.com/2024/01/29/pFubMV0.png)
+![home](https://pic.imgdb.cn/item/65fade479f345e8d0383c1fb.jpg)
 
 ## 动态
 
