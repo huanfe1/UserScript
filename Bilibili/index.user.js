@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.2.1
+// @version      1.2.2
 // @description  简化B站，去除页面无用元素
 // @author       huanfei
 // @match         *://*.bilibili.com/*
@@ -23,17 +23,11 @@
         '.fan-badge', // 粉丝勋章
         '.sailing',
         '.bb-comment .nameplate, .comment-bilibili-fold .nameplate, .nameplate-holder', // 成就徽章
-        '.reply-tag-list', // 热评标签
         '.reply-notice', // 评论通知
         '.left-loc-entry', // 顶部栏杂项
         'ul.right-entry > .vip-wrap, .item:has(#van-popover-6213)', // 顶部栏大会员按钮
         '.vip-entry-containter', // 充值大会员
-        '.feed-card{margin-top:40px !important;display:block !important}',
-        '.container.is-version8>.bili-video-card.is-rcmd{margin-top:40px !important}',
-        '.b-avatar__layer.center{width:48px !important;height:48px !important}',
-        '.bili-dyn-live-users{position:inherit !important;top:0px !important}', //动态左侧直播不随屏幕滚动
         '.up-info-container .bili-avatar{width:48px !important;height:48px !important;transform:translate(0px, 0px) !important}', // 头像样式修复
-        '.load-more-anchor{position:absolute;bottom:100vh;right:0;visibility:hidden;hight:20vh;}',
         // 首页
         '.recommended-swipe.grid-anchor',
         '.feed-card:has(.bili-video-card__info--ad)',
@@ -41,6 +35,10 @@
         '.bili-video-card.is-rcmd:has(.bili-video-card__info--ad)',
         '.feed-roll-btn',
         '.bili-live-card.is-rcmd',
+        '.bili-video-card.is-rcmd:empty', // 与广告屏蔽插件同时启用时出现的空白格
+        '.feed-card:has(.bili-video-card.is-rcmd:empty)', // 与广告屏蔽插件同时启用时出现的空白格
+        '.feed-card{margin-top:40px !important;display:block !important}',
+        '.bili-video-card:has(.loading_animation), .load-more-anchor{margin-top:40px !important;}',
         // 播放页
         '#bannerAd',
         '.reply-decorate',
@@ -67,6 +65,10 @@
         '.bili-dyn-content__dispute', // 安全提醒
         '.b-avatar__canvas > div.b-avatar__layers:not(:nth-child(1))', // 头像挂件
         '.b-avatar__layers > div:not(:nth-child(1))', // 头像挂件
+        '.reply-tag-list', // 热评标签
+        '.container.is-version8>.bili-video-card.is-rcmd{margin-top:40px !important}',
+        '.b-avatar__layer.center{width:48px !important;height:48px !important}', // 认证标志
+        '.bili-dyn-live-users{position:inherit !important;top:0px !important}', //动态左侧直播不随屏幕滚动
         // 搜索页
         '.video-list > div:has(.bili-video-card__info--ad)',
         '#biliMainFooter',
