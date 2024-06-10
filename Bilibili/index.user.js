@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站简化
 // @namespace    https://huanfei.top/
-// @version      1.2.2
+// @version      1.2.3
 // @description  简化B站，去除页面无用元素
 // @author       huanfei
 // @match         *://*.bilibili.com/*
@@ -39,6 +39,9 @@
         '.feed-card:has(.bili-video-card.is-rcmd:empty)', // 与广告屏蔽插件同时启用时出现的空白格
         '.feed-card{margin-top:40px !important;display:block !important}',
         '.bili-video-card:has(.loading_animation), .load-more-anchor{margin-top:40px !important;}',
+        '.load-more-anchor .floor-skeleton{border:none !important;box-shadow:none !important;}',
+        '.load-more-anchor .layer',
+        'bili-video-card. .bili-video-card__skeleton--light',
         // 播放页
         '#bannerAd',
         '.reply-decorate',
