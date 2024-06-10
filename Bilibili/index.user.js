@@ -41,7 +41,7 @@
         '.bili-video-card:has(.loading_animation), .load-more-anchor{margin-top:40px !important;}',
         '.load-more-anchor .floor-skeleton{border:none !important;box-shadow:none !important;}',
         '.load-more-anchor .layer',
-        'bili-video-card. .bili-video-card__skeleton--light',
+        '.bili-video-card .bili-video-card__skeleton--light',
         // 播放页
         '#bannerAd',
         '.reply-decorate',
