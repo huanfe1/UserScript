@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.5
+// @version      1.1.6
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -73,6 +73,16 @@
             e.href = trueURL;
             e.classList.add('modify');
         });
+
+        // 清除文字超链接
+        const textLinkSelector = 'a.RichContent-EntityWord:not(.clear)';
+        waitForElementInFrames(() => {
+            document.querySelectorAll(textLinkSelector).forEach(e => {
+                e.hidden = true;
+                e.parentNode.append(e.innerText);
+                e.classList.add('clear');
+            });
+        }, textLinkSelector);
     });
 
     // 添加折叠按钮
@@ -91,4 +101,21 @@
         });
         document.querySelector('.CornerAnimayedFlex').append(button);
     };
+
+    // 指定帧数内根据元素是否存在执行函数
+    function waitForElementInFrames(fn, selectors) {
+        let currentFrame = 0;
+        const targetFrame = 25;
+        function checkFrame() {
+            if (currentFrame >= targetFrame) return;
+            if (document.querySelector(selectors)) {
+                console.log(document.querySelector(selectors));
+                fn();
+                return;
+            }
+            currentFrame++;
+            requestAnimationFrame(checkFrame);
+        }
+        requestAnimationFrame(checkFrame);
+    }
 })();
