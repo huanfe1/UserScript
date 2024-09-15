@@ -109,7 +109,6 @@
         function checkFrame() {
             if (currentFrame >= targetFrame) return;
             if (document.querySelector(selectors)) {
-                console.log(document.querySelector(selectors));
                 fn();
                 return;
             }
