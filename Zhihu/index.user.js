@@ -7,12 +7,18 @@
 // @match        *://*.zhihu.com/*
 // @icon         https://static.zhihu.com/heifetz/favicon.ico
 // @grant        GM_addStyle
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
 // @license      MIT License
 // @run-at       document-start
 // ==/UserScript==
 
 (function () {
     const style = [
+        // 通用
+        'ul.AppHeader-Tabs li:has(a[href*="zhida"]){display:none;}',
+        '.Topic-tabs{overflow:visible;}',
         // 首页
         '.origin_image{max-width:50%;}',
         '.Topstory-mainColumn{width:inherit;}',
@@ -51,6 +57,8 @@
         // 折叠按钮
         '.CornerAnimayedFlex{height:130px;}',
         '.CornerAnimayedFlex > button:nth-child(2){margin-top:10px;transform:rotate(90deg);}',
+        // 创作中心
+        '.Modal-wrapper{display:none;}', // 弹窗
     ];
     GM_addStyle(style.join('').replaceAll(';', '!important;'));
 
@@ -73,7 +81,6 @@
             e.href = trueURL;
             e.classList.add('modify');
         });
-
         // 清除文字超链接
         const textLinkSelector = 'a.RichContent-EntityWord:not(.clear)';
         waitForElementInFrames(() => {
@@ -117,4 +124,14 @@
         }
         requestAnimationFrame(checkFrame);
     }
+
+    // 自定义菜单
+    GM_registerMenuCommand('深浅主题切换', () => {
+        const theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+        const url = new URL(location.href);
+        const params = new URLSearchParams(url.search);
+        params.set('theme', theme);
+        url.search = params.toLocaleString();
+        location.href = url.href;
+    });
 })();
