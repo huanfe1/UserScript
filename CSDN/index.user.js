@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CSDN 简化
 // @namespace    https://huanfei.top/
-// @version      0.0.1
+// @version      0.0.2
 // @description  去除 CSDN 博客多余杂项，保持页面简洁
 // @author       huanfei
 // @match        *://blog.csdn.net/*
@@ -21,8 +21,20 @@
         '.option-box[data-type="guide"]{display:none !important}',
         '.option-box[data-type="cs"]{display:none !important}',
         '.hide-article-box.hide-article-pos{display:none !important}',
+        '.passport-login-container{display:none !important}',
+        '#articleSearchTip{display:none !important}',
+        '.tool-active-list{display:none !important}',
+        '.toolbar-btn-vip{display:none !important}',
+        'li:has(a[href*="gitcode"]){display:none !important}',
+        'li:has(a[href*="inscode"]){display:none !important}',
+        'li:has(a[href*="summit"]){display:none !important}',
+        'li:has(a[href*="so.csdn.net"]){display:none !important}',
     ];
     GM_addStyle(style.join(''));
+
+    // 自由复制
+    window.addEventListener('copy', e => e.stopPropagation(), true);
+
     document.onreadystatechange = () => {
         document.querySelector('.option-box[data-type="gotop"]').remove();
         const top = document.createElement('a');
