@@ -19,6 +19,8 @@
         // 通用
         'ul.AppHeader-Tabs li:has(a[href*="zhida"]){display:none;}',
         '.Topic-tabs{overflow:visible;}',
+        'html[data-theme=dark] body{color: #cecece;}',
+        'html[data-theme=dark] h2.ContentItem-title{color: #cbcbcb;}',
         // 首页
         '.origin_image{max-width:50%;}',
         '.Topstory-mainColumn{width:inherit;}',
