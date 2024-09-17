@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.8
+// @version      1.1.9
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -59,8 +59,6 @@
         // 折叠按钮
         '.CornerAnimayedFlex{height:130px;}',
         '.CornerAnimayedFlex > button:nth-child(2){margin-top:10px;transform:rotate(90deg);}',
-        // 创作中心
-        '.Modal-wrapper{display:none;}', // 弹窗
     ];
     GM_addStyle(style.join('').replaceAll(';', '!important;'));
 
