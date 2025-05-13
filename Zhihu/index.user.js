@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.9
+// @version      1.1.10
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -21,6 +21,7 @@
         '.Topic-tabs{overflow:visible;}',
         'html[data-theme=dark] body{color: #cecece;}',
         'html[data-theme=dark] h2.ContentItem-title{color: #cbcbcb;}',
+        '.Pc-word-new{display:none;}',
         // 首页
         '.origin_image{max-width:50%;}',
         '.Topstory-mainColumn{width:inherit;}',
