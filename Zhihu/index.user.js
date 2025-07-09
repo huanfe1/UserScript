@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎宽屏
 // @namespace    https://huanfei.top/
-// @version      1.1.11
+// @version      1.1.12
 // @description  将网页主体部分变宽，去除杂冗部分
 // @author       huanfei
 // @match        *://*.zhihu.com/*
@@ -101,13 +101,13 @@
         button.addEventListener('click', () => {
             const topElement = [...document.querySelectorAll('.Topstory-recommend .Card.TopstoryItem')]
                 .reverse()
-                .find(el => el.getBoundingClientRect().y < 0).nextElementSibling;
+                .find(el => el.getBoundingClientRect().y < 0)?.nextElementSibling;
             document.querySelectorAll('span.RichContent-collapsedText').forEach(el => el.click());
             document.querySelectorAll('.Zi.Zi--Comment.Button-zi').forEach(el => {
                 const button = el.parentElement.parentElement;
                 if (button.textContent == '​收起评论') button.click();
             });
-            requestAnimationFrame(() => topElement.scrollIntoView());
+            requestAnimationFrame(() => topElement?.scrollIntoView());
         });
         document.querySelector('.CornerAnimayedFlex').append(button);
     };
